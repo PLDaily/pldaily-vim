@@ -82,6 +82,10 @@
 " General {
 
     set background=dark         " Assume a dark background
+    set guioptions-=r           " remove right-hand scroll bar
+    set guioptions-=l           " remove left-hand scroll bar
+    set guioptions-=L           " remove left-hand scroll bar even if there is a vertical split
+    set guioptions-=b           " remove bottom scroll bar
 
     " Allow to trigger background
     function! ToggleBG()
@@ -275,7 +279,7 @@
     " character) add the following to your .vimrc.before.local file:
     "   let g:spf13_leader='\'
     if !exists('g:spf13_leader')
-        let mapleader = ','
+        let mapleader = '\'
     else
         let mapleader=g:spf13_leader
     endif
@@ -454,6 +458,10 @@
     " fullscreen mode for GVIM and Terminal, need 'wmctrl' in you PATH
     map <silent> <F11> :call system("wmctrl -ir " . v:windowid . " -b toggle,fullscreen")<CR>
 
+    " Easier Copy Yank
+    nnoremap <Leader>y "+y<CR>
+    nnoremap <Leader>p "+p<CR>
+
 " }
 
 " Plugins {
@@ -581,7 +589,7 @@
             let NERDTreeShowBookmarks=1
             let NERDTreeIgnore=['\.py[cd]$', '\~$', '\.swo$', '\.swp$', '^\.git$', '^\.hg$', '^\.svn$', '\.bzr$']
             let NERDTreeChDirMode=0
-            let NERDTreeQuitOnOpen=1
+            let NERDTreeQuitOnOpen=0
             let NERDTreeMouseMode=2
             let NERDTreeShowHidden=1
             let NERDTreeKeepTreeInNewTab=1
@@ -1244,8 +1252,13 @@
 
 " Use local gvimrc if available and gui is running {
     if has('gui_running')
+        colorscheme gruvbox
+        set guifont=HackNerdFontComplete-Regular:h16
         if filereadable(expand("~/.gvimrc.local"))
             source ~/.gvimrc.local
         endif
+    elseif !has('gui_running')
+        colorscheme gruvbox
+        set guifont=HackNerdFontComplete-Regular:h16
     endif
 " }
