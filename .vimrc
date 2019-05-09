@@ -109,9 +109,9 @@
     scriptencoding utf-8
 
     if has('clipboard')
-        if has('unnamedplus')  " When possible use + register for copy-paste
-            set clipboard=unnamed,unnamedplus
-        else         " On mac and Windows, use * register for copy-paste
+        if has('unnamedplus')  " when possible use + register for copy-paste
+            set clipboard=unnamed
+        else         " on mac and windows, use * register for copy-paste
             set clipboard=unnamed
         endif
     endif
@@ -186,7 +186,7 @@
         let g:solarized_termtrans=1
         let g:solarized_contrast="normal"
         let g:solarized_visibility="normal"
-        color solarized             " Load a colorscheme
+        color onedark " Load a colorscheme
     endif
 
     set tabpagemax=15               " Only show 15 tabs
@@ -243,7 +243,7 @@
 
     set nowrap                      " Do not wrap long lines
     set autoindent                  " Indent at the same level of the previous line
-    set shiftwidth=4                " Use indents of 4 spaces
+    set shiftwidth=2                " Use indents of 4 spaces
     set expandtab                   " Tabs are spaces, not tabs
     set tabstop=4                   " An indentation every four columns
     set softtabstop=4               " Let backspace delete indent
@@ -260,7 +260,9 @@
     autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl,sql autocmd BufWritePre <buffer> if !exists('g:spf13_keep_trailing_whitespace') | call StripTrailingWhitespace() | endif
     "autocmd FileType go autocmd BufWritePre <buffer> Fmt
     autocmd BufNewFile,BufRead *.html.twig set filetype=html.twig
-    autocmd FileType haskell,puppet,ruby,yml setlocal expandtab shiftwidth=2 softtabstop=2
+    autocmd BufNewFile,BufRead *.ts set filetype=typescript
+    autocmd BufNewFile,BufRead *.ts set syntax=typescript
+    autocmd FileType haskell,puppet,ruby,yml,javascript setlocal expandtab shiftwidth=2 softtabstop=2
     " preceding line best in a plugin but here for now.
 
     autocmd BufNewFile,BufRead *.coffee set filetype=coffee
@@ -279,7 +281,7 @@
     " character) add the following to your .vimrc.before.local file:
     "   let g:spf13_leader='\'
     if !exists('g:spf13_leader')
-        let mapleader = '\'
+        let mapleader = ' '
     else
         let mapleader=g:spf13_leader
     endif
@@ -1059,6 +1061,7 @@
         " See `:echo g:airline_theme_map` for some more choices
         " Default in terminal vim is 'dark'
         if isdirectory(expand("~/.vim/bundle/vim-airline-themes/"))
+            let g:airline_theme = 'onedark'
             if !exists('g:airline_theme')
                 let g:airline_theme = 'solarized'
             endif
@@ -1252,13 +1255,13 @@
 
 " Use local gvimrc if available and gui is running {
     if has('gui_running')
-        colorscheme gruvbox
+        colorscheme onedark
         set guifont=HackNerdFontComplete-Regular:h16
         if filereadable(expand("~/.gvimrc.local"))
             source ~/.gvimrc.local
         endif
     elseif !has('gui_running')
-        colorscheme gruvbox
+        colorscheme onedark
         set guifont=HackNerdFontComplete-Regular:h16
     endif
 " }

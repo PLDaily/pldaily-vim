@@ -103,6 +103,7 @@
         if count(g:spf13_bundle_groups, 'general')
             Bundle 'scrooloose/nerdtree'
             Bundle 'altercation/vim-colors-solarized'
+            Bundle 'joshdick/onedark.vim'
             Bundle 'spf13/vim-colors'
             Bundle 'tpope/vim-surround'
             Bundle 'tpope/vim-repeat'
@@ -217,6 +218,18 @@
             Bundle 'briancollins/vim-jst'
             Bundle 'kchmck/vim-coffee-script'
             Bundle 'leafgarland/typescript-vim'
+            Bundle 'heavenshell/vim-jsdoc'
+            Bundle 'Quramy/tsuquyomi'
+            Bundle 'posva/vim-vue'
+            Bundle 'Galooshi/vim-import-js'
+            Bundle 'maksimr/vim-jsbeautify'
+            Bundle 'mmalecki/vim-node.js'
+            Bundle 'moll/vim-node'
+            Bundle 'neoclide/vim-jsx-improve'
+            Bundle 'othree/es.next.syntax.vim'
+            Bundle 'othree/javascript-libraries-syntax.vim'
+            Bundle 'ternjs/tern_for_vim'
+            Bundle 'othree/yajs.vim'
         endif
     " }
 
