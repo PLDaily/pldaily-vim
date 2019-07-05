@@ -119,7 +119,7 @@
     " Most prefer to automatically switch to the current file directory when
     " a new buffer is opened; to prevent this behavior, add the following to
     " your .vimrc.before.local file:
-    "   let g:spf13_no_autochdir = 1
+       let g:spf13_no_autochdir = 1
     if !exists('g:spf13_no_autochdir')
         autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
         " Always switch to the current file directory
@@ -130,7 +130,7 @@
     set viewoptions=folds,options,cursor,unix,slash " Better Unix / Windows compatibility
     set virtualedit=onemore             " Allow for cursor beyond last character
     set history=1000                    " Store a ton of history (default is 20)
-    set spell                           " Spell checking on
+    set nospell                         " Spell checking on
     set hidden                          " Allow buffer switching without saving
     set iskeyword-=.                    " '.' is an end of word designator
     set iskeyword-=#                    " '#' is an end of word designator
@@ -241,7 +241,7 @@
 
 " Formatting {
 
-    set nowrap                      " Do not wrap long lines
+    set wrap                        " Do not wrap long lines
     set autoindent                  " Indent at the same level of the previous line
     set shiftwidth=2                " Use indents of 4 spaces
     set expandtab                   " Tabs are spaces, not tabs
@@ -262,7 +262,7 @@
     autocmd BufNewFile,BufRead *.html.twig set filetype=html.twig
     autocmd BufNewFile,BufRead *.ts set filetype=typescript
     autocmd BufNewFile,BufRead *.ts set syntax=typescript
-    autocmd FileType haskell,puppet,ruby,yml,javascript setlocal expandtab shiftwidth=2 softtabstop=2
+    autocmd FileType haskell,puppet,ruby,yml,javascript,typescript setlocal expandtab shiftwidth=2 softtabstop=2
     " preceding line best in a plugin but here for now.
 
     autocmd BufNewFile,BufRead *.coffee set filetype=coffee
@@ -407,7 +407,7 @@
     " Most prefer to toggle search highlighting rather than clear the current
     " search results. To clear search highlighting rather than toggle it on
     " and off, add the following to your .vimrc.before.local file:
-    "   let g:spf13_clear_search_highlight = 1
+    let g:spf13_clear_search_highlight = 1
     if exists('g:spf13_clear_search_highlight')
         nmap <silent> <leader>/ :nohlsearch<CR>
     else
@@ -479,8 +479,9 @@
             let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
             let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
             au FileType go nmap <Leader>s <Plug>(go-implements)
-            au FileType go nmap <Leader>i <Plug>(go-info)
-            au FileType go nmap <Leader>e <Plug>(go-rename)
+            au FileType go nmap <Leader>i <Plug>(go-imports)
+            "au FileType go nmap <Leader>i <Plug>(go-info)
+            "au FileType go nmap <Leader>e <Plug>(go-rename)
             au FileType go nmap <leader>r <Plug>(go-run)
             au FileType go nmap <leader>b <Plug>(go-build)
             au FileType go nmap <leader>t <Plug>(go-test)
@@ -1061,7 +1062,7 @@
         " See `:echo g:airline_theme_map` for some more choices
         " Default in terminal vim is 'dark'
         if isdirectory(expand("~/.vim/bundle/vim-airline-themes/"))
-            let g:airline_theme = 'onedark'
+            let g:airline_theme = 'gruvbox'
             if !exists('g:airline_theme')
                 let g:airline_theme = 'solarized'
             endif
@@ -1183,6 +1184,7 @@
         setlocal nobuflisted
         setlocal noswapfile
         setlocal nowrap
+        setlocal nospell
         setlocal filetype=shell
         setlocal syntax=shell
 
@@ -1255,13 +1257,15 @@
 
 " Use local gvimrc if available and gui is running {
     if has('gui_running')
-        colorscheme onedark
-        set guifont=HackNerdFontComplete-Regular:h16
+        colorscheme gruvbox
+        set guifont=FiraCode-Regular:h17
         if filereadable(expand("~/.gvimrc.local"))
             source ~/.gvimrc.local
         endif
     elseif !has('gui_running')
-        colorscheme onedark
-        set guifont=HackNerdFontComplete-Regular:h16
+        "colorscheme onedark
+        colorscheme gruvbox
+        set guifont=FiraCode-Regular:h17
+        "set guifont=HackNerdFontComplete-Regular:h16
     endif
 " }
