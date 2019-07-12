@@ -263,9 +263,8 @@
     autocmd BufNewFile,BufRead *.html.twig set filetype=html.twig
     autocmd BufNewFile,BufRead *.ts set filetype=typescript syntax=typescript
     autocmd BufNewFile,BufRead *.tsx set filetype=typescript syntax=typescript
-    autocmd FileType haskell,puppet,ruby,yml,javascript,typescript setlocal expandtab shiftwidth=2 softtabstop=2 foldmethod=syntax nospell
+    autocmd FileType haskell,puppet,ruby,yml,javascript,typescript setlocal expandtab shiftwidth=2 softtabstop=2
     " preceding line best in a plugin but here for now.
-
     autocmd BufNewFile,BufRead *.coffee set filetype=coffee
 
     " Workaround vim-commentary for Haskell
