@@ -128,6 +128,7 @@
     "set autowrite                       " Automatically write a file when leaving a modified buffer
     set shortmess+=filmnrxoOtT          " Abbrev. of messages (avoids 'hit enter')
     set viewoptions=folds,options,cursor,unix,slash " Better Unix / Windows compatibility
+    set foldmethod=syntax
     set virtualedit=onemore             " Allow for cursor beyond last character
     set history=1000                    " Store a ton of history (default is 20)
     set nospell                         " Spell checking on
@@ -260,9 +261,9 @@
     autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl,sql autocmd BufWritePre <buffer> if !exists('g:spf13_keep_trailing_whitespace') | call StripTrailingWhitespace() | endif
     "autocmd FileType go autocmd BufWritePre <buffer> Fmt
     autocmd BufNewFile,BufRead *.html.twig set filetype=html.twig
-    autocmd BufNewFile,BufRead *.ts set filetype=typescript
-    autocmd BufNewFile,BufRead *.ts set syntax=typescript
-    autocmd FileType haskell,puppet,ruby,yml,javascript,typescript setlocal expandtab shiftwidth=2 softtabstop=2
+    autocmd BufNewFile,BufRead *.ts set filetype=typescript syntax=typescript
+    autocmd BufNewFile,BufRead *.tsx set filetype=typescript syntax=typescript
+    autocmd FileType haskell,puppet,ruby,yml,javascript,typescript setlocal expandtab shiftwidth=2 softtabstop=2 foldmethod=syntax nospell
     " preceding line best in a plugin but here for now.
 
     autocmd BufNewFile,BufRead *.coffee set filetype=coffee
@@ -318,6 +319,12 @@
         map <C-L> <C-W>l<C-W>_
         map <C-H> <C-W>h<C-W>_
     endif
+    " window 切换映射
+    noremap <C-J> <C-W>j
+    noremap <C-K> <C-W>k
+    noremap <C-L> <C-W>l
+    noremap <C-H> <C-W>h
+    noremap <C-W> <C-W>w
 
     " Wrapped lines goes down/up to next row, rather than next line in file.
     noremap j gj
@@ -735,7 +742,7 @@
             " Enable omni completion.
             autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
             autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-            autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+            autocmd FileType javascript,typescript setlocal omnifunc=javascriptcomplete#CompleteJS
             autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
             autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
             autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
@@ -959,7 +966,7 @@
             " Enable omni completion.
             autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
             autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-            autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+            autocmd FileType javascript,typescript setlocal omnifunc=javascriptcomplete#CompleteJS
             autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
             autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
             autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
@@ -983,7 +990,7 @@
             " Enable omni-completion.
             autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
             autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-            autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+            autocmd FileType javascript,typescript setlocal omnifunc=javascriptcomplete#CompleteJS
             autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
             autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
             autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
@@ -1074,7 +1081,10 @@
         endif
     " }
 
-
+    " Ack {
+       if isdirectory(expand("~/.vim/bundle/ack.vim/"))
+        endif
+    " }
 
 " }
 
@@ -1217,26 +1227,26 @@
      
     function! s:EditSpf13Config()
         call <SID>ExpandFilenameAndExecute("tabedit", "~/.vimrc")
-        call <SID>ExpandFilenameAndExecute("vsplit", "~/.vimrc.before")
-        call <SID>ExpandFilenameAndExecute("vsplit", "~/.vimrc.bundles")
+        "call <SID>ExpandFilenameAndExecute("vsplit", "~/.vimrc.before")
+        "call <SID>ExpandFilenameAndExecute("vsplit", "~/.vimrc.bundles")
      
-        execute bufwinnr(".vimrc") . "wincmd w"
-        call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.local")
-        wincmd l
-        call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.before.local")
-        wincmd l
-        call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.bundles.local")
+        "execute bufwinnr(".vimrc") . "wincmd w"
+        "call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.local")
+        "wincmd l
+        "call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.before.local")
+        "wincmd l
+        "call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.bundles.local")
      
-        if <SID>IsSpf13Fork()
-            execute bufwinnr(".vimrc") . "wincmd w"
-            call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.fork")
-            wincmd l
-            call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.before.fork")
-            wincmd l
-            call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.bundles.fork")
-        endif
+        "if <SID>IsSpf13Fork()
+        "    execute bufwinnr(".vimrc") . "wincmd w"
+        "    call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.fork")
+        "    wincmd l
+        "    call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.before.fork")
+        "    wincmd l
+        "    call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.bundles.fork")
+        "endif
      
-        execute bufwinnr(".vimrc.local") . "wincmd w"
+        "execute bufwinnr(".vimrc.local") . "wincmd w"
     endfunction
      
     execute "noremap " . s:spf13_edit_config_mapping " :call <SID>EditSpf13Config()<CR>"
