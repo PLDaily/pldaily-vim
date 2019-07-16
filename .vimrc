@@ -1,34 +1,3 @@
-" Modeline and Notes {
-" vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={,} foldlevel=0 foldmethod=marker spell:
-"
-"                    __ _ _____              _
-"         ___ _ __  / _/ |___ /      __   __(_)_ __ ___
-"        / __| '_ \| |_| | |_ \ _____\ \ / /| | '_ ` _ \
-"        \__ \ |_) |  _| |___) |_____|\ V / | | | | | | |
-"        |___/ .__/|_| |_|____/        \_/  |_|_| |_| |_|
-"            |_|
-"
-"   This is the personal .vimrc file of Steve Francia.
-"   While much of it is beneficial for general use, I would
-"   recommend picking out the parts you want and understand.
-"
-"   You can find me at http://spf13.com
-"
-"   Copyright 2014 Steve Francia
-"
-"   Licensed under the Apache License, Version 2.0 (the "License");
-"   you may not use this file except in compliance with the License.
-"   You may obtain a copy of the License at
-"
-"       http://www.apache.org/licenses/LICENSE-2.0
-"
-"   Unless required by applicable law or agreed to in writing, software
-"   distributed under the License is distributed on an "AS IS" BASIS,
-"   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-"   See the License for the specific language governing permissions and
-"   limitations under the License.
-" }
-
 " Environment {
 
     " Identify platform {
@@ -65,12 +34,6 @@
         endif
     " }
 
-" }
-
-" Use before config if available {
-    if filereadable(expand("~/.vimrc.before"))
-        source ~/.vimrc.before
-    endif
 " }
 
 " Use bundles config {
@@ -319,11 +282,10 @@
         map <C-H> <C-W>h<C-W>_
     endif
     " window 切换映射
-    noremap <C-J> <C-W>j
-    noremap <C-K> <C-W>k
-    noremap <C-L> <C-W>l
-    noremap <C-H> <C-W>h
-    noremap <C-W> <C-W>w
+    nmap <C-J> <C-W>j
+    nmap <C-K> <C-W>k
+    nmap <C-L> <C-W>l
+    nmap <C-H> <C-W>h
 
     " Wrapped lines goes down/up to next row, rather than next line in file.
     noremap j gj
@@ -750,7 +712,7 @@
             " Haskell post write lint and check with ghcmod
             " $ `cabal install ghcmod` if missing and ensure
             " ~/.cabal/bin is in your $PATH.
-            if !executable("ghcmod")
+            if !executable("ghc-mod")
                 autocmd BufWritePost *.hs GhcModCheckAndLintAsync
             endif
 
@@ -1029,7 +991,7 @@
     " Haskell post write lint and check with ghcmod
     " $ `cabal install ghcmod` if missing and ensure
     " ~/.cabal/bin is in your $PATH.
-    if !executable("ghcmod")
+    if !executable("ghc-mod")
         autocmd BufWritePost *.hs GhcModCheckAndLintAsync
     endif
 
@@ -1080,9 +1042,10 @@
         endif
     " }
 
-    " Ack {
-       if isdirectory(expand("~/.vim/bundle/ack.vim/"))
-        endif
+    " Haskell {
+       if isdirectory(expand("~/.vim/bundle/haskellmode-vim/"))
+           let g:haddock_browser="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+       endif
     " }
 
 " }
@@ -1208,69 +1171,22 @@
     " e.g. Grep current file for <search_term>: Shell grep -Hn <search_term> %
     " }
 
-    function! s:IsSpf13Fork()
-        let s:is_fork = 0
-        let s:fork_files = ["~/.vimrc.fork", "~/.vimrc.before.fork", "~/.vimrc.bundles.fork"]
-        for fork_file in s:fork_files
-            if filereadable(expand(fork_file, ":p"))
-                let s:is_fork = 1
-                break
-            endif
-        endfor
-        return s:is_fork
-    endfunction
-     
     function! s:ExpandFilenameAndExecute(command, file)
         execute a:command . " " . expand(a:file, ":p")
     endfunction
      
     function! s:EditSpf13Config()
         call <SID>ExpandFilenameAndExecute("tabedit", "~/.vimrc")
-        "call <SID>ExpandFilenameAndExecute("vsplit", "~/.vimrc.before")
-        "call <SID>ExpandFilenameAndExecute("vsplit", "~/.vimrc.bundles")
-     
-        "execute bufwinnr(".vimrc") . "wincmd w"
-        "call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.local")
-        "wincmd l
-        "call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.before.local")
-        "wincmd l
-        "call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.bundles.local")
-     
-        "if <SID>IsSpf13Fork()
-        "    execute bufwinnr(".vimrc") . "wincmd w"
-        "    call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.fork")
-        "    wincmd l
-        "    call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.before.fork")
-        "    wincmd l
-        "    call <SID>ExpandFilenameAndExecute("split", "~/.vimrc.bundles.fork")
-        "endif
-     
-        "execute bufwinnr(".vimrc.local") . "wincmd w"
     endfunction
      
     execute "noremap " . s:spf13_edit_config_mapping " :call <SID>EditSpf13Config()<CR>"
     execute "noremap " . s:spf13_apply_config_mapping . " :source ~/.vimrc<CR>"
 " }
 
-" Use fork vimrc if available {
-    if filereadable(expand("~/.vimrc.fork"))
-        source ~/.vimrc.fork
-    endif
-" }
-
-" Use local vimrc if available {
-    if filereadable(expand("~/.vimrc.local"))
-        source ~/.vimrc.local
-    endif
-" }
-
 " Use local gvimrc if available and gui is running {
     if has('gui_running')
         colorscheme gruvbox
         set guifont=FiraCode-Regular:h17
-        if filereadable(expand("~/.gvimrc.local"))
-            source ~/.gvimrc.local
-        endif
     elseif !has('gui_running')
         "colorscheme onedark
         colorscheme gruvbox
