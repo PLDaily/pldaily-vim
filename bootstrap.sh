@@ -1,29 +1,13 @@
 #!/usr/bin/env bash
 
-#   Copyright 2014 Steve Francia
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-
-############################  SETUP PARAMETERS
-app_name='spf13-vim'
-[ -z "$APP_PATH" ] && APP_PATH="$HOME/.spf13-vim-3"
-[ -z "$REPO_URI" ] && REPO_URI='https://github.com/pldaily/spf13-vim.git'
-[ -z "$REPO_BRANCH" ] && REPO_BRANCH='3.0'
+app_name='pldaily-vim'
+[ -z "$APP_PATH" ] && APP_PATH="$HOME/.pldaily-vim"
+[ -z "$REPO_URI" ] && REPO_URI='https://github.com/pldaily/pldaily-vim.git'
+[ -z "$REPO_BRANCH" ] && REPO_BRANCH='master'
 debug_mode='0'
 fork_maintainer='0'
 [ -z "$VUNDLE_URI" ] && VUNDLE_URI="https://github.com/gmarik/vundle.git"
 
-############################  BASIC SETUP TOOLS
 msg() {
     printf '%b\n' "$1" >&2
 }
@@ -80,8 +64,6 @@ lnif() {
     debug
 }
 
-############################ SETUP FUNCTIONS
-
 do_backup() {
     if [ -e "$1" ] || [ -e "$2" ] || [ -e "$3" ]; then
         msg "Attempting to back up your original vim configuration."
@@ -123,7 +105,6 @@ create_symlinks() {
 
     lnif "$source_path/.vimrc"         "$target_path/.vimrc"
     lnif "$source_path/.vimrc.bundles" "$target_path/.vimrc.bundles"
-    lnif "$source_path/.vimrc.before"  "$target_path/.vimrc.before"
     lnif "$source_path/.vim"           "$target_path/.vim"
 
     if program_exists "nvim"; then
@@ -131,30 +112,9 @@ create_symlinks() {
         lnif "$source_path/.vimrc"     "$target_path/.config/nvim/init.vim"
     fi
 
-    touch  "$target_path/.vimrc.local"
-
     ret="$?"
     success "Setting up vim symlinks."
     debug
-}
-
-setup_fork_mode() {
-    local source_path="$2"
-    local target_path="$3"
-
-    if [ "$1" -eq '1' ]; then
-        touch "$target_path/.vimrc.fork"
-        touch "$target_path/.vimrc.bundles.fork"
-        touch "$target_path/.vimrc.before.fork"
-
-        lnif "$source_path/.vimrc.fork"         "$target_path/.vimrc.fork"
-        lnif "$source_path/.vimrc.bundles.fork" "$target_path/.vimrc.bundles.fork"
-        lnif "$source_path/.vimrc.before.fork"  "$target_path/.vimrc.before.fork"
-
-        ret="$?"
-        success "Created fork maintainer files."
-        debug
-    fi
 }
 
 setup_vundle() {
@@ -191,16 +151,11 @@ sync_repo       "$APP_PATH" \
 create_symlinks "$APP_PATH" \
                 "$HOME"
 
-setup_fork_mode "$fork_maintainer" \
-                "$APP_PATH" \
-                "$HOME"
-
 sync_repo       "$HOME/.vim/bundle/vundle" \
                 "$VUNDLE_URI" \
                 "master" \
                 "vundle"
 
-setup_vundle    "$APP_PATH/.vimrc.bundles.default"
+setup_vundle    "$APP_PATH/.vimrc.bundles"
 
 msg             "\nThanks for installing $app_name."
-msg             "© `date +%Y` http://vim.spf13.com/"
