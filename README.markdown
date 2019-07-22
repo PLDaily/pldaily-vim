@@ -1,28 +1,28 @@
-## 安装
+## pldaily-vim
+
+### 安装
 
 
 ```bash
-cd $HOME/to/pldaily-vim/
-sh bootstrap.sh
+git clone https://github.com/PLDaily/pldaily-vim.git ~/clone/path
+sh ~/clone/path/bootstrap.sh
 ```
 
-## 选择语言插件
+### 语言插件选择
 
 - .vim.bundles
 
 
 ```vim
-let g:spf13_bundle_groups=[\'general\', \'programming\', \'misc\', \'youcompleteme\']
+let g:spf13_bundle_groups=['general', 'writing', 'neocomplete', 'programming', 'go', 'haskell', 'javascript', 'html', 'misc']
 ```
 
-## 新加插件
+### 添加新插件
 
-```
-vim +BundleInstall! +BundleClean +q
-```
+`.vim.bundles` 文件新加新插件，执行 `vim +BundleInstall! +BundleClean +q`
 
-## 编辑配置文件
+### 编辑配置文件
 
-`<Leader>ev`  打开配置文件并修改
+`<Leader>ev`  打开配置文件
 
 `<Leader>sv`  执行配置文件
