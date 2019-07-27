@@ -207,7 +207,7 @@
 
     set wrap                        " Do not wrap long lines
     set autoindent                  " Indent at the same level of the previous line
-    set shiftwidth=2                " Use indents of 4 spaces
+    set shiftwidth=4                " Use indents of 4 spaces
     set expandtab                   " Tabs are spaces, not tabs
     set tabstop=4                   " An indentation every four columns
     set softtabstop=4               " Let backspace delete indent
@@ -228,12 +228,13 @@
     autocmd BufNewFile,BufRead *.tsx set filetype=typescript syntax=typescript
     autocmd FileType haskell,puppet,ruby,yml,javascript,typescript setlocal expandtab shiftwidth=2 softtabstop=2
     " preceding line best in a plugin but here for now.
+
     autocmd BufNewFile,BufRead *.coffee set filetype=coffee
 
     " Workaround vim-commentary for Haskell
     autocmd FileType haskell setlocal commentstring=--\ %s
     " Workaround broken colour highlighting in Haskell
-    autocmd FileType haskell,rust setlocal nospell
+    autocmd FileType haskell,rust,typescript,javascript setlocal nospell
 
 " }
 
@@ -1048,6 +1049,13 @@
        endif
     " }
 
+    " vim-startify {
+       if isdirectory(expand("~/.vim/bundle/vim-startify/"))
+         let g:startify_session_dir = expand("~/.cache/session")
+         let g:startify_files_number = 10
+         let g:startify_session_number = 10
+       endif
+       " }
 " }
 
 " GUI Settings {

@@ -117,6 +117,8 @@
             Bundle 'kana/vim-textobj-indent'
             Bundle 'gcmt/wildfire.vim'
             Bundle 'neoclide/coc.nvim'
+            Bundle 'mhinz/vim-startify'
+            Bundle 'voldikss/vim-translate-me'
         endif
     " }
 
