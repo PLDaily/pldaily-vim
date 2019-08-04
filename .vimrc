@@ -240,49 +240,19 @@
 
 " Key (re)Mappings {
 
-    " The default leader is '\', but many people prefer ',' as it's in a standard
-    " location. To override this behavior and set it back to '\' (or any other
-    " character) add the following to your .vimrc.before.local file:
-    "   let g:spf13_leader='\'
-    if !exists('g:spf13_leader')
-        let mapleader = ' '
-    else
-        let mapleader=g:spf13_leader
-    endif
-    if !exists('g:spf13_localleader')
-        let maplocalleader = '_'
-    else
-        let maplocalleader=g:spf13_localleader
-    endif
+    " The default leader is ' '
+    let mapleader = ' '
 
-    " The default mappings for editing and applying the spf13 configuration
-    " are <leader>ev and <leader>sv respectively. Change them to your preference
-    " by adding the following to your .vimrc.before.local file:
-    "   let g:spf13_edit_config_mapping='<leader>ec'
-    "   let g:spf13_apply_config_mapping='<leader>sc'
-    if !exists('g:spf13_edit_config_mapping')
-        let s:spf13_edit_config_mapping = '<leader>ev'
-    else
-        let s:spf13_edit_config_mapping = g:spf13_edit_config_mapping
-    endif
-    if !exists('g:spf13_apply_config_mapping')
-        let s:spf13_apply_config_mapping = '<leader>sv'
-    else
-        let s:spf13_apply_config_mapping = g:spf13_apply_config_mapping
-    endif
+    " The default local leader is ' '
+    let maplocalleader = '_'
+
+    " editing the configuration
+    let s:pldaily_edit_config_mapping = '<leader>ev'
+
+    " editing and applying the spf13 configuration
+    let s:pldaily_apply_config_mapping = '<leader>sv'
 
     " Easier moving in tabs and windows
-    " The lines conflict with the default digraph mapping of <C-K>
-    " If you prefer that functionality, add the following to your
-    " .vimrc.before.local file:
-    "   let g:spf13_no_easyWindows = 1
-    if !exists('g:spf13_no_easyWindows')
-        map <C-J> <C-W>j<C-W>_
-        map <C-K> <C-W>k<C-W>_
-        map <C-L> <C-W>l<C-W>_
-        map <C-H> <C-W>h<C-W>_
-    endif
-    " window 切换映射
     nmap <C-J> <C-W>j
     nmap <C-K> <C-W>k
     nmap <C-L> <C-W>l
@@ -383,7 +353,6 @@
         nmap <silent> <leader>/ :set invhlsearch<CR>
     endif
 
-
     " Find merge conflict markers
     map <leader>fc /\v^[<\|=>]{7}( .*\|$)<CR>
 
@@ -432,7 +401,6 @@
     " Easier Copy Yank
     nnoremap <Leader>y "+y<CR>
     nnoremap <Leader>p "+p<CR>
-
 " }
 
 " Plugins {
@@ -492,7 +460,7 @@
 
     " Misc {
         if isdirectory(expand("~/.vim/bundle/nerdtree"))
-            let g:NERDShutUp=1
+            let g:NERDShutUp = 1
         endif
         if isdirectory(expand("~/.vim/bundle/matchit.zip"))
             let b:match_ignorecase = 1
@@ -1020,42 +988,39 @@
     " }
 
     " vim-airline {
-        " Set configuration options for the statusline plugin vim-airline.
-        " Use the powerline theme and optionally enable powerline symbols.
-        " To use the symbols , , , , , , and .in the statusline
-        " segments add the following to your .vimrc.before.local file:
-        "   let g:airline_powerline_fonts=1
-        " If the previous symbols do not render for you then install a
-        " powerline enabled font.
-
-        " See `:echo g:airline_theme_map` for some more choices
-        " Default in terminal vim is 'dark'
         if isdirectory(expand("~/.vim/bundle/vim-airline-themes/"))
+            let g:airline_powerline_fonts = 1
             let g:airline_theme = 'gruvbox'
-            if !exists('g:airline_theme')
-                let g:airline_theme = 'solarized'
-            endif
-            if !exists('g:airline_powerline_fonts')
-                " Use the default set of separators with a few customizations
-                let g:airline_left_sep='›'  " Slightly fancier than '>'
-                let g:airline_right_sep='‹' " Slightly fancier than '<'
-            endif
         endif
     " }
 
     " Haskell {
-       if isdirectory(expand("~/.vim/bundle/haskellmode-vim/"))
-           let g:haddock_browser="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-       endif
+        if isdirectory(expand("~/.vim/bundle/haskellmode-vim/"))
+            let g:haddock_browser="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+        endif
     " }
 
     " vim-startify {
-       if isdirectory(expand("~/.vim/bundle/vim-startify/"))
-         let g:startify_session_dir = expand("~/.cache/session")
-         let g:startify_files_number = 10
-         let g:startify_session_number = 10
-       endif
-       " }
+        if isdirectory(expand("~/.vim/bundle/vim-startify/"))
+            let g:startify_session_dir = expand("~/.cache/session")
+            let g:startify_files_number = 10
+            let g:startify_session_number = 10
+        endif
+    " }
+
+    " vim-translate-me {
+        if isdirectory(expand("~/.vim/bundle/vim-translate-me/"))
+            " <Leader>t 翻译光标下的文本，在命令行回显
+            nmap <silent> <Leader>t <Plug>Translate
+            vmap <silent> <Leader>t <Plug>TranslateV
+            " Leader>w 翻译光标下的文本，在窗口中显示
+            nmap <silent> <Leader>w <Plug>TranslateW
+            vmap <silent> <Leader>w <Plug>TranslateWV
+            " Leader>r 替换光标下的文本为翻译内容
+            nmap <silent> <Leader>r <Plug>TranslateR
+            vmap <silent> <Leader>r <Plug>TranslateRV
+        endif
+    " }
 " }
 
 " GUI Settings {
@@ -1187,8 +1152,8 @@
         call <SID>ExpandFilenameAndExecute("tabedit", "~/.vimrc")
     endfunction
      
-    execute "noremap " . s:spf13_edit_config_mapping " :call <SID>EditSpf13Config()<CR>"
-    execute "noremap " . s:spf13_apply_config_mapping . " :source ~/.vimrc<CR>"
+    execute "noremap " . s:pldaily_edit_config_mapping " :call <SID>EditSpf13Config()<CR>"
+    execute "noremap " . s:pldaily_apply_config_mapping . " :source ~/.vimrc<CR>"
 " }
 
 " Use local gvimrc if available and gui is running {
