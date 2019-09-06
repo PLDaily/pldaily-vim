@@ -2,19 +2,17 @@
 
 ### 安装
 
-
 ```bash
-git clone https://github.com/PLDaily/pldaily-vim.git ~/clone/path
-sh ~/clone/path/bootstrap.sh
+git clone https://github.com/PLDaily/pldaily-vim.git
+sh pldaily-vim/bootstrap.sh
 ```
 
 ### 语言插件选择
 
 - .vim.bundles
 
-
 ```vim
-let g:spf13_bundle_groups=['general', 'writing', 'neocomplete', 'programming', 'go', 'haskell', 'javascript', 'html', 'misc']
+let g:spf13_bundle_groups=['general', 'writing', 'neocomplete', 'programming', 'go', 'javascript', 'html', 'misc']
 ```
 
 ### 添加新插件
@@ -26,3 +24,10 @@ let g:spf13_bundle_groups=['general', 'writing', 'neocomplete', 'programming', '
 `<Leader>ev`  打开配置文件
 
 `<Leader>sv`  执行配置文件
+
+### coc 模块报错
+
+```sh
+cd ~/.vim/bundle/coc.nvim
+sudo sh install.sh
+```
