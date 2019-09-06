@@ -896,6 +896,33 @@
         endif
     " }
 
+    " Snippets {	
+        if count(g:spf13_bundle_groups, 'neocomplcache') ||	
+                    \ count(g:spf13_bundle_groups, 'neocomplete')	
+
+             " Use honza's snippets.	
+            let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'	
+
+             " Enable neosnippet snipmate compatibility mode	
+            let g:neosnippet#enable_snipmate_compatibility = 1	
+
+             " For snippet_complete marker.	
+            if !exists("g:spf13_no_conceal")	
+                if has('conceal')	
+                    set conceallevel=2 concealcursor=i	
+                endif	
+            endif	
+
+             " Enable neosnippets when using go	
+            let g:go_snippet_engine = "neosnippet"	
+
+             " Disable the neosnippet preview candidate window	
+            " When enabled, there can be too much visual noise	
+            " especially when splits are used.	
+            set completeopt-=preview	
+        endif	
+    " }
+
     " UndoTree {
         if isdirectory(expand("~/.vim/bundle/undotree/"))
             nnoremap <Leader>u :UndotreeToggle<CR>
@@ -956,6 +983,102 @@
 " }
 
 " Functions {
+
+    " Initialize directories {	
+        function! InitializeDirectories()	
+            let parent = $HOME	
+            let prefix = 'vim'	
+            let dir_list = {	
+                        \ 'backup': 'backupdir',	
+                        \ 'views': 'viewdir',	
+                        \ 'swap': 'directory' }	
+
+            if has('persistent_undo')	
+                let dir_list['undo'] = 'undodir'	
+            endif	
+
+            " To specify a different directory in which to place the vimbackup,	
+            " vimviews, vimundo, and vimswap files/directories, add the following to	
+            " your .vimrc.before.local file:	
+            "   let g:spf13_consolidated_directory = <full path to desired directory>	
+            "   eg: let g:spf13_consolidated_directory = $HOME . '/.vim/'	
+            if exists('g:spf13_consolidated_directory')	
+                let common_dir = g:spf13_consolidated_directory . prefix	
+            else	
+                let common_dir = parent . '/.' . prefix	
+            endif	
+
+            for [dirname, settingname] in items(dir_list)	
+                let directory = common_dir . dirname . '/'	
+                if exists("*mkdir")	
+                    if !isdirectory(directory)	
+                        call mkdir(directory)	
+                    endif	
+                endif	
+                if !isdirectory(directory)	
+                    echo "Warning: Unable to create backup directory: " . directory	
+                    echo "Try: mkdir -p " . directory	
+                else	
+                    let directory = substitute(directory, " ", "\\\\ ", "g")	
+                    exec "set " . settingname . "=" . directory	
+                endif	
+            endfor	
+        endfunction	
+        call InitializeDirectories()	
+    " }	
+
+    " Initialize NERDTree as needed {	
+        function! NERDTreeInitAsNeeded()	
+            redir => bufoutput	
+            buffers!	
+            redir END	
+            let idx = stridx(bufoutput, "NERD_tree")	
+            if idx > -1	
+                NERDTreeMirror	
+                NERDTreeFind	
+                wincmd l	
+            endif	
+        endfunction	
+    " }	
+
+    " Strip whitespace {	
+        function! StripTrailingWhitespace()	
+            " Preparation: save last search, and cursor position.	
+            let _s=@/	
+            let l = line(".")	
+            let c = col(".")	
+            " do the business:	
+            %s/\s\+$//e	
+            " clean up: restore previous search history, and cursor position	
+            let @/=_s	
+            call cursor(l, c)	
+        endfunction	
+    " }	
+
+    " Shell command {	
+        function! s:RunShellCommand(cmdline)	
+            botright new	
+
+            setlocal buftype=nofile	
+            setlocal bufhidden=delete	
+            setlocal nobuflisted	
+            setlocal noswapfile	
+            setlocal nowrap	
+            setlocal nospell	
+            setlocal filetype=shell	
+            setlocal syntax=shell	
+
+            call setline(1, a:cmdline)	
+            call setline(2, substitute(a:cmdline, '.', '=', 'g'))	
+            execute 'silent $read !' . escape(a:cmdline, '%#')	
+            setlocal nomodifiable	
+            1	
+        endfunction	
+
+        command! -complete=file -nargs=+ Shell call s:RunShellCommand(<q-args>)	
+        " e.g. Grep current file for <search_term>: Shell grep -Hn <search_term> %	
+    " }
+
     function! s:ExpandFilenameAndExecute(command, file)
         execute a:command . " " . expand(a:file, ":p")
     endfunction
