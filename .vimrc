@@ -38,6 +38,10 @@
         Plug 'nathanaelkane/vim-indent-guides'
     " }
 
+    " JavaScript {
+        Plug 'heavenshell/vim-jsdoc'
+    " }
+
     call plug#end()
 
 " }
@@ -190,6 +194,10 @@
                 let col = col('.') - 1
                 return !col || getline('.')[col - 1]  =~# '\s'
             endfunction
+
+            " coc-prettier
+            vmap <leader>f  <Plug>(coc-format-selected)
+            nmap <leader>f  <Plug>(coc-format-selected)
         endif
     " }
 
@@ -244,11 +252,17 @@
         endif
     " }
 
-    " indent_guides {
+    " Indent_guides {
         if isdirectory(expand("~/.vim/plugged/vim-indent-guides/"))
             let g:indent_guides_start_level = 2
             let g:indent_guides_guide_size = 1
             let g:indent_guides_enable_on_vim_startup = 1
+        endif
+    " }
+
+    " JsDoc {
+        if isdirectory(expand("~/.vim/plugged/vim-jsdoc/"))
+            nmap <silent> <leader>l <Plug>(jsdoc)
         endif
     " }
 
