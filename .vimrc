@@ -36,6 +36,7 @@
         Plug 'raimondi/delimitMate'
         Plug 'mileszs/ack.vim'
         Plug 'nathanaelkane/vim-indent-guides'
+        Plug 'majutsushi/tagbar'
     " }
 
     " JavaScript {
@@ -108,6 +109,7 @@
 
     autocmd BufNewFile,BufRead *.ts set filetype=typescript syntax=typescript
     autocmd BufNewFile,BufRead *.tsx set filetype=typescript syntax=typescript
+    autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
     autocmd FileType html,css,javascript,typescript setlocal tabstop=2 shiftwidth=2 softtabstop=2
 
 " }
@@ -263,6 +265,12 @@
     " JsDoc {
         if isdirectory(expand("~/.vim/plugged/vim-jsdoc/"))
             nmap <silent> <leader>l <Plug>(jsdoc)
+        endif
+    " }
+
+    " Tagbar {
+        if isdirectory(expand("~/.vim/plugged/tagbar/"))
+            nnoremap <silent> <leader>tt :TagbarToggle<CR>
         endif
     " }
 
