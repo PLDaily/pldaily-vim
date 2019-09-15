@@ -170,6 +170,7 @@
             colorscheme gruvbox
         endif
     " }
+
     " NerdTree {
         if isdirectory(expand("~/.vim/plugged/nerdtree"))
             map <C-e> <plug>NERDTreeTabsToggle<CR>
@@ -285,9 +286,9 @@
     " Vim-closetag {
         if isdirectory(expand("~/.vim/plugged/vim-closetag"))
             let g:closetag_filenames = "*.html,*.jsx,*.tsx,*.vue"
-            let g:closetag_emptyTags_caseSensitive = 1
         endif
     " }
+
 " }
 
 " Functions {
