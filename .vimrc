@@ -37,6 +37,7 @@
         Plug 'mileszs/ack.vim'
         Plug 'nathanaelkane/vim-indent-guides'
         Plug 'majutsushi/tagbar'
+        Plug 'alvan/vim-closetag'
     " }
 
     " JavaScript {
@@ -72,7 +73,6 @@
 
 " Vim UI {
 
-    colorscheme gruvbox
     set guifont=FiraCode-Regular:h17
 
     set tabpagemax=15               " Only show 15 tabs
@@ -107,9 +107,10 @@
     set splitright                  " Puts new vsplit windows to the right of the current
     set splitbelow                  " Puts new split windows to the bottom of the current
 
-    autocmd BufNewFile,BufRead *.ts set filetype=typescript syntax=typescript
-    autocmd BufNewFile,BufRead *.tsx set filetype=typescript syntax=typescript
-    autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
+    " autocmd BufNewFile,BufRead *.ts set filetype=typescript syntax=typescript
+    " autocmd BufNewFile,BufRead *.tsx set filetype=typescript syntax=typescript
+    " autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
+    autocmd BufNewFile,BufRead *.tsx set syntax=typescript
     autocmd FileType html,css,javascript,typescript setlocal tabstop=2 shiftwidth=2 softtabstop=2
 
 " }
@@ -164,6 +165,11 @@
 
 " Plugins {
 
+    " Gruvbox {
+        if isdirectory(expand("~/.vim/plugged/gruvbox"))
+            colorscheme gruvbox
+        endif
+    " }
     " NerdTree {
         if isdirectory(expand("~/.vim/plugged/nerdtree"))
             map <C-e> <plug>NERDTreeTabsToggle<CR>
@@ -204,7 +210,7 @@
     " }
 
      " CtrlP {
-        if isdirectory(expand("~/.vim/plugged/ctrlp.vim/"))
+        if isdirectory(expand("~/.vim/plugged/ctrlp.vim"))
             let g:ctrlp_working_path_mode = 'ra'
             nnoremap <silent> <D-t> :CtrlP<CR>
             nnoremap <silent> <D-r> :CtrlPMRU<CR>
@@ -218,6 +224,8 @@
                 let s:ctrlp_fallback = 'ack-grep %s --nocolor -f'
             elseif executable('ack')
                 let s:ctrlp_fallback = 'ack %s --nocolor -f'
+            else
+                let s:ctrlp_fallback = 'find %s -type f'
             endif
 
             let g:ctrlp_user_command = {
@@ -255,7 +263,7 @@
     " }
 
     " Indent_guides {
-        if isdirectory(expand("~/.vim/plugged/vim-indent-guides/"))
+        if isdirectory(expand("~/.vim/plugged/vim-indent-guides"))
             let g:indent_guides_start_level = 2
             let g:indent_guides_guide_size = 1
             let g:indent_guides_enable_on_vim_startup = 1
@@ -263,17 +271,23 @@
     " }
 
     " JsDoc {
-        if isdirectory(expand("~/.vim/plugged/vim-jsdoc/"))
+        if isdirectory(expand("~/.vim/plugged/vim-jsdoc"))
             nmap <silent> <leader>l <Plug>(jsdoc)
         endif
     " }
 
     " Tagbar {
-        if isdirectory(expand("~/.vim/plugged/tagbar/"))
+        if isdirectory(expand("~/.vim/plugged/tagbar"))
             nnoremap <silent> <leader>tt :TagbarToggle<CR>
         endif
     " }
 
+    " Vim-closetag {
+        if isdirectory(expand("~/.vim/plugged/vim-closetag"))
+            let g:closetag_filenames = "*.html,*.jsx,*.tsx,*.vue"
+            let g:closetag_emptyTags_caseSensitive = 1
+        endif
+    " }
 " }
 
 " Functions {

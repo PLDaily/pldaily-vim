@@ -1,6 +1,9 @@
 # 安装 ag
 brew install ag
 
+# 安装 ctags
+brew install ctags
+
 # 安装字体
 brew tap homebrew/cask-fonts
 brew cask install font-fira-code
