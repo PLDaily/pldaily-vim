@@ -38,6 +38,9 @@
         Plug 'nathanaelkane/vim-indent-guides'
         Plug 'majutsushi/tagbar'
         Plug 'alvan/vim-closetag'
+        Plug 'mbbill/undotree'
+        Plug 'easymotion/vim-easymotion'
+        Plug 'tpope/vim-surround'
     " }
 
     " JavaScript {
@@ -286,6 +289,20 @@
     " Vim-closetag {
         if isdirectory(expand("~/.vim/plugged/vim-closetag"))
             let g:closetag_filenames = "*.html,*.jsx,*.tsx,*.vue"
+        endif
+    " }
+
+    " vim-airline {
+        if isdirectory(expand("~/.vim/plugged/vim-airline"))
+            let g:airline_powerline_fonts = 1
+            let g:airline_theme = 'gruvbox'
+        endif
+    " }
+
+    " UndoTree {
+        if isdirectory(expand("~/.vim/plugged/undotree"))
+            nnoremap <Leader>u :UndotreeToggle<CR>
+            let g:undotree_SetFocusWhenToggle = 1
         endif
     " }
 
