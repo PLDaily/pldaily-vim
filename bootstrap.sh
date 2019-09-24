@@ -10,6 +10,8 @@ brew cask install font-fira-code
 
 # 设置软连接
 ln -sf ~/.vim/.vimrc ~/.vimrc
+ln -s ~/.vimrc ~/.vim/init.vim
+ln -s ~/.vim ~/.config/nvim
 
 # 安装 vim 插件
 vim +PlugInstall +qall

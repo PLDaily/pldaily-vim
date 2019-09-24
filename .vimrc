@@ -30,6 +30,8 @@
         Plug 'jistr/vim-nerdtree-tabs'
         Plug 'morhetz/gruvbox'
         Plug 'neoclide/coc.nvim', {'branch': 'release'}
+        Plug 'iamcco/markdown-preview.vim'
+        Plug 'tpope/vim-repeat'
         Plug 'ctrlpvim/ctrlp.vim'
         Plug 'vim-airline/vim-airline'
         Plug 'scrooloose/nerdcommenter'
@@ -41,6 +43,8 @@
         Plug 'mbbill/undotree'
         Plug 'easymotion/vim-easymotion'
         Plug 'tpope/vim-surround'
+        Plug 'airblade/vim-gitgutter'
+        Plug 'tpope/vim-fugitive'
     " }
 
     " JavaScript {
@@ -114,7 +118,7 @@
     " autocmd BufNewFile,BufRead *.tsx set filetype=typescript syntax=typescript
     " autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
     autocmd BufNewFile,BufRead *.tsx set syntax=typescript
-    autocmd FileType html,css,javascript,typescript setlocal tabstop=2 shiftwidth=2 softtabstop=2
+    autocmd FileType html,css,javascript,typescript,json,typescriptreact setlocal tabstop=2 shiftwidth=2 softtabstop=2
 
 " }
 
@@ -193,9 +197,6 @@
 
     " Coc.nvim {
         if isdirectory(expand("~/.vim/plugged/coc.nvim"))
-            " 使用 <c-f> 强制触发补全
-            inoremap <silent><expr> <c-f> coc#refresh()
-
             " 使用 `<TAB>` 切换
             inoremap <silent><expr> <TAB>
                   \ pumvisible() ? "\<C-n>" :
@@ -305,6 +306,32 @@
             let g:undotree_SetFocusWhenToggle = 1
         endif
     " }
+
+    " markdown-preview {
+        if isdirectory(expand("~/.vim/plugged/markdown-preview.vim"))
+            nmap <silent> <F8> <Plug>MarkdownPreview        " 普通模式
+            imap <silent> <F8> <Plug>MarkdownPreview        " 插入模式
+            nmap <silent> <F9> <Plug>StopMarkdownPreview    " 普通模式
+            imap <silent> <F9> <Plug>StopMarkdownPreview    " 插入模式
+        endif
+    " }
+
+    " Fugitive {
+        if isdirectory(expand("~/.vim/plugged/vim-fugitive"))
+            nnoremap <silent> <leader>gs :Gstatus<CR>
+            nnoremap <silent> <leader>gd :Gdiff<CR>
+        endif
+    "}
+
+    " Gitgutter {
+        if isdirectory(expand("~/.vim/plugged/vim-gitgutter"))
+            nmap <leader>hn <Plug>(GitGutterNextHunk)
+            nmap <leader>hp <Plug>(GitGutterPrevHunk)
+            nmap <leader>hs <Plug>(GitGutterStageHunk)
+            nmap <leader>hu <Plug>(GitGutterUndoHunk)
+            nmap <leader>hv <Plug>(GitGutterPreviewHunk)
+        endif
+    "}
 
 " }
 
