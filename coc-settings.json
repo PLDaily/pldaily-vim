@@ -1,4 +1,4 @@
 {
-    "tslint.autoFixOnSave": true,
+    "tslint.autoFixOnSave": false,
     "tsserver.enableJavascript": false
 }

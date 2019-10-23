@@ -28,7 +28,7 @@
     " General {
         Plug 'scrooloose/nerdtree'
         Plug 'jistr/vim-nerdtree-tabs'
-        Plug 'morhetz/gruvbox'
+        Plug 'arcticicestudio/nord-vim'
         Plug 'neoclide/coc.nvim', {'branch': 'release'}
         Plug 'iamcco/markdown-preview.vim'
         Plug 'tpope/vim-repeat'
@@ -38,17 +38,22 @@
         Plug 'raimondi/delimitMate'
         Plug 'mileszs/ack.vim'
         Plug 'nathanaelkane/vim-indent-guides'
-        Plug 'majutsushi/tagbar'
-        Plug 'alvan/vim-closetag'
-        Plug 'mbbill/undotree'
-        Plug 'easymotion/vim-easymotion'
         Plug 'tpope/vim-surround'
-        Plug 'airblade/vim-gitgutter'
-        Plug 'tpope/vim-fugitive'
+        Plug 'mbbill/undotree'
+        " Plug 'majutsushi/tagbar'
+        " Plug 'alvan/vim-closetag'
+        " Plug 'easymotion/vim-easymotion'
+        " Plug 'airblade/vim-gitgutter'
+        " Plug 'tpope/vim-fugitive'
+        " Plug 'junegunn/gv.vim'
+    " }
+
+    " Html {
+        Plug 'mattn/emmet-vim'
     " }
 
     " JavaScript {
-        Plug 'heavenshell/vim-jsdoc'
+        " Plug 'heavenshell/vim-jsdoc'
     " }
 
     call plug#end()
@@ -71,7 +76,7 @@
 
     set clipboard=unnamed
 
-    set foldmethod=syntax
+    " set foldmethod=syntax
     set history=1000                    " Store a ton of history (default is 20)
     set nospell                         " Spell checking off
     set hidden                          " Allow buffer switching without saving
@@ -80,7 +85,7 @@
 
 " Vim UI {
 
-    set guifont=FiraCode-Regular:h17
+    set guifont=MesloLGLNerdFontComplete-Regular:h15
 
     set tabpagemax=15               " Only show 15 tabs
     set showmode                    " Display the current mode
@@ -142,9 +147,14 @@
     nmap <C-L> <C-W>l
     nmap <C-H> <C-W>h
 
+    " Switch net buffer
+    nmap <C-N> :bNext<CR>
+
     " Wrapped lines goes down/up to next row, rather than next line in file.
     noremap j gj
     noremap k gk
+    noremap J gj
+    noremap K gk
 
     nnoremap Y y$
 
@@ -172,9 +182,9 @@
 
 " Plugins {
 
-    " Gruvbox {
-        if isdirectory(expand("~/.vim/plugged/gruvbox"))
-            colorscheme gruvbox
+    " Nord {
+        if isdirectory(expand("~/.vim/plugged/nord-vim"))
+            colorscheme nord
         endif
     " }
 
@@ -296,12 +306,18 @@
     " vim-airline {
         if isdirectory(expand("~/.vim/plugged/vim-airline"))
             let g:airline_powerline_fonts = 1
-            let g:airline_theme = 'gruvbox'
+            let g:airline_theme = 'nord'
         endif
     " }
 
     " UndoTree {
         if isdirectory(expand("~/.vim/plugged/undotree"))
+            if has("persistent_undo")
+                set undodir=$HOME."/.vimundo"
+                set undofile                " So is persistent undo ...
+                set undolevels=1000         " Maximum number of changes that can be undone
+                set undoreload=10000        " Maximum number lines to save for undo on a buffer reload
+            endif
             nnoremap <Leader>u :UndotreeToggle<CR>
             let g:undotree_SetFocusWhenToggle = 1
         endif
@@ -333,6 +349,15 @@
         endif
     "}
 
+    " Emmet {
+        if isdirectory(expand("~/.vim/plugged/emmet-vim"))
+            " https://github.com/mattn/emmet-vim/blob/master/doc/emmet.txt
+            " html:5 <c-y>, 生成 html5 骨架
+            " <C-y>, 生成标签
+            " <C-y>j 切换成自闭合标签
+            let g:user_emmet_leader_key='<C-Y>'
+        endif
+    "}
 " }
 
 " Functions {
