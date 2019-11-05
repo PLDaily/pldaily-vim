@@ -23,37 +23,60 @@
 
 " Use plug config {
 
+    " let g:pldaily_plug_groups = ['general', 'markdown', 'html', 'javascript', 'git', 'golang']
+    let g:pldaily_plug_groups = ['general', 'markdown', 'html', 'javascript', 'golang']
+
     call plug#begin('~/.vim/plugged')
 
     " General {
-        Plug 'scrooloose/nerdtree'
-        Plug 'jistr/vim-nerdtree-tabs'
-        Plug 'arcticicestudio/nord-vim'
-        Plug 'neoclide/coc.nvim', {'branch': 'release'}
-        Plug 'iamcco/markdown-preview.vim'
-        Plug 'tpope/vim-repeat'
-        Plug 'ctrlpvim/ctrlp.vim'
-        Plug 'vim-airline/vim-airline'
-        Plug 'scrooloose/nerdcommenter'
-        Plug 'raimondi/delimitMate'
-        Plug 'mileszs/ack.vim'
-        Plug 'nathanaelkane/vim-indent-guides'
-        Plug 'tpope/vim-surround'
-        Plug 'mbbill/undotree'
-        " Plug 'majutsushi/tagbar'
-        " Plug 'alvan/vim-closetag'
-        " Plug 'easymotion/vim-easymotion'
-        " Plug 'airblade/vim-gitgutter'
-        " Plug 'tpope/vim-fugitive'
-        " Plug 'junegunn/gv.vim'
+        if count(g:pldaily_plug_groups, 'general')
+            Plug 'scrooloose/nerdtree'
+            Plug 'vim-airline/vim-airline'
+            Plug 'arcticicestudio/nord-vim'
+            Plug 'ryanoasis/vim-devicons'
+            Plug 'Yggdroot/indentLine'
+            Plug 'mbbill/undotree'
+            Plug 'ctrlpvim/ctrlp.vim'
+            Plug 'mileszs/ack.vim'
+            Plug 'scrooloose/nerdcommenter'
+            Plug 'raimondi/delimitMate'
+            Plug 'tpope/vim-surround'
+            Plug 'tpope/vim-repeat'
+        endif
+    " }
+
+    " Markdown {
+        if count(g:pldaily_plug_groups, 'markdown')
+            Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+            Plug 'hotoo/pangu.vim'
+        endif
     " }
 
     " Html {
-        Plug 'mattn/emmet-vim'
+        if count(g:pldaily_plug_groups, 'html')
+            Plug 'mattn/emmet-vim'
+        endif
     " }
 
     " JavaScript {
-        " Plug 'heavenshell/vim-jsdoc'
+        if count(g:pldaily_plug_groups, 'javascript')
+            Plug 'leafgarland/typescript-vim'
+            Plug 'neoclide/coc.nvim', {'branch': 'release'}
+        endif
+    " }
+
+    " Git {
+        if count(g:pldaily_plug_groups, 'git')
+            Plug 'airblade/vim-gitgutter'
+            Plug 'tpope/vim-fugitive'
+            Plug 'junegunn/gv.vim'
+        endif
+    " }
+
+    " GoLang {
+        if count(g:pldaily_plug_groups, 'golang')
+            Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+        endif
     " }
 
     call plug#end()
@@ -123,7 +146,8 @@
     " autocmd BufNewFile,BufRead *.tsx set filetype=typescript syntax=typescript
     " autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
     autocmd BufNewFile,BufRead *.tsx set syntax=typescript
-    autocmd FileType html,css,javascript,typescript,json,typescriptreact setlocal tabstop=2 shiftwidth=2 softtabstop=2
+    autocmd BufNewFile,BufRead *.mdx set filetype=mdx syntax=markdown
+    autocmd FileType html,css,scss,javascript,typescript,json,typescriptreact,mdx setlocal tabstop=2 shiftwidth=2 softtabstop=2
 
 " }
 
@@ -147,7 +171,7 @@
     nmap <C-L> <C-W>l
     nmap <C-H> <C-W>h
 
-    " Switch net buffer
+    " Switch next buffer
     nmap <C-N> :bNext<CR>
 
     " Wrapped lines goes down/up to next row, rather than next line in file.
@@ -190,18 +214,18 @@
 
     " NerdTree {
         if isdirectory(expand("~/.vim/plugged/nerdtree"))
-            map <C-e> <plug>NERDTreeTabsToggle<CR>
+            map <C-e> :NERDTreeToggle<CR>
             map <leader>e :NERDTreeFind<CR>
             nmap <leader>nt :NERDTreeFind<CR>
 
-            let NERDTreeShowBookmarks=1
-            let NERDTreeIgnore=['\.py[cd]$', '\~$', '\.swo$', '\.swp$', '^\.git$', '^\.hg$', '^\.svn$', '\.bzr$']
-            let NERDTreeChDirMode=0
-            let NERDTreeQuitOnOpen=0
-            let NERDTreeMouseMode=2
-            let NERDTreeShowHidden=1
-            let NERDTreeKeepTreeInNewTab=1
-            let g:nerdtree_tabs_open_on_gui_startup=0
+            let NERDTreeShowBookmarks = 1
+            let NERDTreeIgnore = ['\.py[cd]$', '\~$', '\.swo$', '\.swp$', '^\.git$', '^\.hg$', '^\.svn$', '\.bzr$']
+            let NERDTreeChDirMode = 0
+            let NERDTreeQuitOnOpen = 0
+            let NERDTreeMouseMode = 2
+            let NERDTreeShowHidden = 1
+            let NERDTreeKeepTreeInNewTab = 1
+            let g:nerdtree_tabs_open_on_gui_startup = 0
         endif
     " }
 
@@ -227,8 +251,8 @@
      " CtrlP {
         if isdirectory(expand("~/.vim/plugged/ctrlp.vim"))
             let g:ctrlp_working_path_mode = 'ra'
-            nnoremap <silent> <D-t> :CtrlP<CR>
-            nnoremap <silent> <D-r> :CtrlPMRU<CR>
+            let g:ctrlp_mruf_relative = 1
+            nnoremap <Leader>b :CtrlPBuffer<CR>
             let g:ctrlp_custom_ignore = {
                 \ 'dir':  '\.git$\|\.hg$\|\.svn$|node_modules$',
                 \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
@@ -251,7 +275,7 @@
                 \ 'fallback': s:ctrlp_fallback
             \ }
         endif
-    "}
+    " }
 
     " Nerdcommenter {
         if isdirectory(expand("~/.vim/plugged/nerdcommenter"))
@@ -271,35 +295,9 @@
             if executable('ag')
                 let g:ackprg = 'ag --nogroup --nocolor --column --smart-case'
             elseif executable('ack-grep')
-                let g:ackprg="ack-grep -H --nocolor --nogroup --column"
+                let g:ackprg = "ack-grep -H --nocolor --nogroup --column"
             endif
             nnoremap <Leader>a :Ack!<Space>
-        endif
-    " }
-
-    " Indent_guides {
-        if isdirectory(expand("~/.vim/plugged/vim-indent-guides"))
-            let g:indent_guides_start_level = 2
-            let g:indent_guides_guide_size = 1
-            let g:indent_guides_enable_on_vim_startup = 1
-        endif
-    " }
-
-    " JsDoc {
-        if isdirectory(expand("~/.vim/plugged/vim-jsdoc"))
-            nmap <silent> <leader>l <Plug>(jsdoc)
-        endif
-    " }
-
-    " Tagbar {
-        if isdirectory(expand("~/.vim/plugged/tagbar"))
-            nnoremap <silent> <leader>tt :TagbarToggle<CR>
-        endif
-    " }
-
-    " Vim-closetag {
-        if isdirectory(expand("~/.vim/plugged/vim-closetag"))
-            let g:closetag_filenames = "*.html,*.jsx,*.tsx,*.vue"
         endif
     " }
 
@@ -313,7 +311,7 @@
     " UndoTree {
         if isdirectory(expand("~/.vim/plugged/undotree"))
             if has("persistent_undo")
-                set undodir=$HOME."/.vimundo"
+                set undodir=$HOME/.vimundo
                 set undofile                " So is persistent undo ...
                 set undolevels=1000         " Maximum number of changes that can be undone
                 set undoreload=10000        " Maximum number lines to save for undo on a buffer reload
@@ -337,7 +335,7 @@
             nnoremap <silent> <leader>gs :Gstatus<CR>
             nnoremap <silent> <leader>gd :Gdiff<CR>
         endif
-    "}
+    " }
 
     " Gitgutter {
         if isdirectory(expand("~/.vim/plugged/vim-gitgutter"))
@@ -347,7 +345,13 @@
             nmap <leader>hu <Plug>(GitGutterUndoHunk)
             nmap <leader>hv <Plug>(GitGutterPreviewHunk)
         endif
-    "}
+    " }
+
+    " Gv {
+        if isdirectory(expand("~/.vim/plugged/gv.vim"))
+            nnoremap <silent> <leader>gv :GV<CR>
+        endif
+    " }
 
     " Emmet {
         if isdirectory(expand("~/.vim/plugged/emmet-vim"))
@@ -355,9 +359,40 @@
             " html:5 <c-y>, 生成 html5 骨架
             " <C-y>, 生成标签
             " <C-y>j 切换成自闭合标签
-            let g:user_emmet_leader_key='<C-Y>'
+            let g:user_emmet_leader_key = '<C-Y>'
         endif
-    "}
+    " }
+
+    " go {
+        if isdirectory(expand("~/.vim/plugged/vim-go"))
+            let g:go_highlight_functions = 1
+            let g:go_version_warning = 0
+            let g:go_highlight_methods = 1
+            let g:go_highlight_structs = 1
+            let g:go_highlight_operators = 1
+            let g:go_highlight_build_constraints = 1
+            let g:go_fmt_command = "goimports"
+            let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+            let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+            au FileType go nmap <Leader>im <Plug>(go-imports)
+            au FileType go nmap <leader>in <Plug>(go-install)
+            au FileType go nmap <leader>gr <Plug>(go-run)
+            au FileType go nmap <leader>gb <Plug>(go-build)
+        endif
+    " }
+
+    " pangu {
+        if isdirectory(expand("~/.vim/plugged/pangu.vim"))
+            autocmd BufWritePre *.markdown,*.md,*.mdx,*.text,*.txt,*.wiki,*.cnx call PanGuSpacing()
+        endif
+    " }
+
+    " IndentLine {
+        if isdirectory(expand("~/.vim/plugged/indentLine"))
+            autocmd Filetype json let g:indentLine_enabled = 0
+        endif
+    " }
+
 " }
 
 " Functions {
