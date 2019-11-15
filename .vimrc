@@ -24,7 +24,7 @@
 " Use plug config {
 
     " let g:pldaily_plug_groups = ['general', 'markdown', 'html', 'javascript', 'git', 'golang']
-    let g:pldaily_plug_groups = ['general', 'markdown', 'html', 'javascript', 'golang']
+    let g:pldaily_plug_groups = ['general', 'markdown', 'html', 'javascript', 'golang', 'clojure']
 
     call plug#begin('~/.vim/plugged')
 
@@ -60,6 +60,7 @@
 
     " JavaScript {
         if count(g:pldaily_plug_groups, 'javascript')
+            Plug 'elzr/vim-json'
             Plug 'leafgarland/typescript-vim'
             Plug 'neoclide/coc.nvim', {'branch': 'release'}
         endif
@@ -76,6 +77,13 @@
     " GoLang {
         if count(g:pldaily_plug_groups, 'golang')
             Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+            Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
+        endif
+    " }
+
+    " Clojure {
+        if count(g:pldaily_plug_groups, 'clojure')
+            Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
         endif
     " }
 
@@ -112,6 +120,7 @@
 
     set tabpagemax=15               " Only show 15 tabs
     set showmode                    " Display the current mode
+    set scrolloff=3                 " scroll when 3 line
 
     set cursorline                  " Highlight current line
 
@@ -121,6 +130,7 @@
     set backspace=indent,eol,start  " Backspace for dummies
     set linespace=0                 " No extra spaces between rows
     set number                      " Line numbers on
+    set relativenumber              " Line relative number on
     set showmatch                   " Show matching brackets/parenthesis
     set incsearch                   " Find as you type search
     set hlsearch                    " Highlight search terms
@@ -147,7 +157,7 @@
     " autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
     autocmd BufNewFile,BufRead *.tsx set syntax=typescript
     autocmd BufNewFile,BufRead *.mdx set filetype=mdx syntax=markdown
-    autocmd FileType html,css,scss,javascript,typescript,json,typescriptreact,mdx setlocal tabstop=2 shiftwidth=2 softtabstop=2
+    autocmd FileType html,css,scss,less,javascript,typescript,json,typescriptreact,mdx setlocal tabstop=2 shiftwidth=2 softtabstop=2
 
 " }
 
@@ -245,6 +255,8 @@
             " coc-prettier
             vmap <leader>f  <Plug>(coc-format-selected)
             nmap <leader>f  <Plug>(coc-format-selected)
+            " Fix autofix problem of current line
+            nmap <leader>qf  <Plug>(coc-fix-current)
         endif
     " }
 
@@ -287,6 +299,7 @@
     " DelimitMate {
         if isdirectory(expand("~/.vim/plugged/delimitMate"))
             let g:delimitMate_expand_cr = 1
+            let g:delimitMate_expand_space = 1
         endif
     " }
 
@@ -383,13 +396,13 @@
 
     " pangu {
         if isdirectory(expand("~/.vim/plugged/pangu.vim"))
-            autocmd BufWritePre *.markdown,*.md,*.mdx,*.text,*.txt,*.wiki,*.cnx call PanGuSpacing()
+            autocmd BufWritePre *.markdown,*.md,*.text,*.txt,*.wiki,*.cnx call PanGuSpacing()
         endif
     " }
 
     " IndentLine {
         if isdirectory(expand("~/.vim/plugged/indentLine"))
-            autocmd Filetype json let g:indentLine_enabled = 0
+            let g:vim_json_syntax_conceal = 0
         endif
     " }
 

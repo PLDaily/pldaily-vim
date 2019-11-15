@@ -6,7 +6,7 @@ brew install ctags
 
 # 安装字体
 brew tap homebrew/cask-fonts
-brew cask install font-fira-code
+brew cask install font-meslo
 
 # 设置软连接
 ln -sf ~/.vim/.vimrc ~/.vimrc
