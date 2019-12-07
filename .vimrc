@@ -23,8 +23,8 @@
 
 " Use plug config {
 
-    " let g:pldaily_plug_groups = ['general', 'markdown', 'html', 'javascript', 'git', 'golang']
-    let g:pldaily_plug_groups = ['general', 'markdown', 'html', 'javascript', 'golang', 'clojure']
+    " let g:pldaily_plug_groups = ['general', 'markdown', 'html', 'css', 'javascript', 'git', 'golang']
+    let g:pldaily_plug_groups = ['general', 'markdown', 'html', 'css', 'javascript', 'golang', 'clojure']
 
     call plug#begin('~/.vim/plugged')
 
@@ -33,6 +33,7 @@
             Plug 'scrooloose/nerdtree'
             Plug 'vim-airline/vim-airline'
             Plug 'arcticicestudio/nord-vim'
+            Plug 'morhetz/gruvbox'
             Plug 'ryanoasis/vim-devicons'
             Plug 'Yggdroot/indentLine'
             Plug 'mbbill/undotree'
@@ -42,6 +43,8 @@
             Plug 'raimondi/delimitMate'
             Plug 'tpope/vim-surround'
             Plug 'tpope/vim-repeat'
+            Plug 'kshenoy/vim-signature'
+            Plug 'christoomey/vim-tmux-navigator'
         endif
     " }
 
@@ -58,11 +61,18 @@
         endif
     " }
 
+    " Css {
+        if count(g:pldaily_plug_groups, 'css')
+            Plug 'cakebaker/scss-syntax.vim'
+        endif
+    " }
+
     " JavaScript {
         if count(g:pldaily_plug_groups, 'javascript')
             Plug 'elzr/vim-json'
             Plug 'leafgarland/typescript-vim'
             Plug 'neoclide/coc.nvim', {'branch': 'release'}
+            Plug 'posva/vim-vue'
         endif
     " }
 
@@ -77,7 +87,6 @@
     " GoLang {
         if count(g:pldaily_plug_groups, 'golang')
             Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-            Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
         endif
     " }
 
@@ -157,7 +166,7 @@
     " autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
     autocmd BufNewFile,BufRead *.tsx set syntax=typescript
     autocmd BufNewFile,BufRead *.mdx set filetype=mdx syntax=markdown
-    autocmd FileType html,css,scss,less,javascript,typescript,json,typescriptreact,mdx setlocal tabstop=2 shiftwidth=2 softtabstop=2
+    autocmd FileType html,css,scss,less,javascript,typescript,json,typescriptreact,vue,mdx,yaml setlocal tabstop=2 shiftwidth=2 softtabstop=2
 
 " }
 
@@ -219,6 +228,7 @@
     " Nord {
         if isdirectory(expand("~/.vim/plugged/nord-vim"))
             colorscheme nord
+            " colorscheme gruvbox
         endif
     " }
 
@@ -260,7 +270,7 @@
         endif
     " }
 
-     " CtrlP {
+    " CtrlP {
         if isdirectory(expand("~/.vim/plugged/ctrlp.vim"))
             let g:ctrlp_working_path_mode = 'ra'
             let g:ctrlp_mruf_relative = 1
@@ -269,7 +279,9 @@
                 \ 'dir':  '\.git$\|\.hg$\|\.svn$|node_modules$',
                 \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
 
-            if executable('ag')
+            if executable('rg')
+                let s:ctrlp_fallback = 'rg %s --files --color=never --glob ""'
+            elseif executable('ag')
                 let s:ctrlp_fallback = 'ag %s --nocolor -l -g ""'
             elseif executable('ack-grep')
                 let s:ctrlp_fallback = 'ack-grep %s --nocolor -f'
@@ -305,7 +317,9 @@
 
     " Ack {
         if isdirectory(expand("~/.vim/plugged/ack.vim"))
-            if executable('ag')
+            if executable('rg')
+                let g:ackprg = 'rg --vimgrep --no-heading'
+            elseif executable('ag')
                 let g:ackprg = 'ag --nogroup --nocolor --column --smart-case'
             elseif executable('ack-grep')
                 let g:ackprg = "ack-grep -H --nocolor --nogroup --column"
@@ -314,7 +328,7 @@
         endif
     " }
 
-    " vim-airline {
+    " Airline {
         if isdirectory(expand("~/.vim/plugged/vim-airline"))
             let g:airline_powerline_fonts = 1
             let g:airline_theme = 'nord'
@@ -334,7 +348,7 @@
         endif
     " }
 
-    " markdown-preview {
+    " Markdown {
         if isdirectory(expand("~/.vim/plugged/markdown-preview.vim"))
             nmap <silent> <F8> <Plug>MarkdownPreview        " 普通模式
             imap <silent> <F8> <Plug>MarkdownPreview        " 插入模式
@@ -376,7 +390,7 @@
         endif
     " }
 
-    " go {
+    " Go {
         if isdirectory(expand("~/.vim/plugged/vim-go"))
             let g:go_highlight_functions = 1
             let g:go_version_warning = 0
@@ -394,7 +408,7 @@
         endif
     " }
 
-    " pangu {
+    " Pangu {
         if isdirectory(expand("~/.vim/plugged/pangu.vim"))
             autocmd BufWritePre *.markdown,*.md,*.text,*.txt,*.wiki,*.cnx call PanGuSpacing()
         endif
@@ -403,6 +417,31 @@
     " IndentLine {
         if isdirectory(expand("~/.vim/plugged/indentLine"))
             let g:vim_json_syntax_conceal = 0
+        endif
+    " }
+
+    " Vue {
+        if isdirectory(expand("~/.vim/plugged/vim-vue"))
+            " vue 下 NERDCommenter 配置
+            let g:ft = ''
+            function! NERDCommenter_before()
+                if &ft == 'vue'
+                    let g:ft = 'vue'
+                    let stack = synstack(line('.'), col('.'))
+                    if len(stack) > 0
+                        let syn = synIDattr((stack)[0], 'name')
+                        if len(syn) > 0
+                            exe 'setf ' . substitute(tolower(syn), '^vue_', '', '')
+                        endif
+                    endif
+                endif
+            endfunction
+            function! NERDCommenter_after()
+                if g:ft == 'vue'
+                    setf vue
+                    let g:ft = ''
+                endif
+            endfunction
         endif
     " }
 
