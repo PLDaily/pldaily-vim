@@ -23,8 +23,7 @@
 
 " Use plug config {
 
-    " let g:pldaily_plug_groups = ['general', 'markdown', 'html', 'css', 'javascript', 'git', 'golang']
-    let g:pldaily_plug_groups = ['general', 'markdown', 'html', 'css', 'javascript', 'golang', 'clojure']
+    let g:pldaily_plug_groups = ['general', 'markdown', 'html', 'css', 'javascript']
 
     call plug#begin('~/.vim/plugged')
 
@@ -33,24 +32,23 @@
             Plug 'scrooloose/nerdtree'
             Plug 'vim-airline/vim-airline'
             Plug 'arcticicestudio/nord-vim'
-            Plug 'morhetz/gruvbox'
             Plug 'ryanoasis/vim-devicons'
             Plug 'Yggdroot/indentLine'
             Plug 'mbbill/undotree'
-            Plug 'ctrlpvim/ctrlp.vim'
-            Plug 'mileszs/ack.vim'
             Plug 'scrooloose/nerdcommenter'
             Plug 'raimondi/delimitMate'
             Plug 'tpope/vim-surround'
             Plug 'tpope/vim-repeat'
-            Plug 'kshenoy/vim-signature'
+            " Plug 'kshenoy/vim-signature'
             Plug 'christoomey/vim-tmux-navigator'
+            Plug 'easymotion/vim-easymotion'
+            " Plug 'scrooloose/im-slumlord'
+            " Plug 'aklt/plantuml-syntax'
         endif
     " }
 
     " Markdown {
         if count(g:pldaily_plug_groups, 'markdown')
-            Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
             Plug 'hotoo/pangu.vim'
         endif
     " }
@@ -73,14 +71,8 @@
             Plug 'leafgarland/typescript-vim'
             Plug 'neoclide/coc.nvim', {'branch': 'release'}
             Plug 'posva/vim-vue'
-        endif
-    " }
-
-    " Git {
-        if count(g:pldaily_plug_groups, 'git')
-            Plug 'airblade/vim-gitgutter'
-            Plug 'tpope/vim-fugitive'
-            Plug 'junegunn/gv.vim'
+            Plug 'isRuslan/vim-es6'
+            Plug 'heavenshell/vim-jsdoc'
         endif
     " }
 
@@ -116,7 +108,10 @@
 
     set clipboard=unnamed
 
-    " set foldmethod=syntax
+    set suffixesadd=.ts,.js,.tsx,.jsx,.json   "gf extensions
+    set foldmethod=indent
+    set nofoldenable
+    set foldlevel=99
     set history=1000                    " Store a ton of history (default is 20)
     set nospell                         " Spell checking off
     set hidden                          " Allow buffer switching without saving
@@ -161,9 +156,6 @@
     set splitright                  " Puts new vsplit windows to the right of the current
     set splitbelow                  " Puts new split windows to the bottom of the current
 
-    " autocmd BufNewFile,BufRead *.ts set filetype=typescript syntax=typescript
-    " autocmd BufNewFile,BufRead *.tsx set filetype=typescript syntax=typescript
-    " autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
     autocmd BufNewFile,BufRead *.tsx set syntax=typescript
     autocmd BufNewFile,BufRead *.mdx set filetype=mdx syntax=markdown
     autocmd FileType html,css,scss,less,javascript,typescript,json,typescriptreact,vue,mdx,yaml setlocal tabstop=2 shiftwidth=2 softtabstop=2
@@ -191,7 +183,7 @@
     nmap <C-H> <C-W>h
 
     " Switch next buffer
-    nmap <C-N> :bNext<CR>
+    nmap <leader>bn :bNext<CR>
 
     " Wrapped lines goes down/up to next row, rather than next line in file.
     noremap j gj
@@ -211,32 +203,25 @@
     vnoremap < <gv
     vnoremap > >gv
 
-    " Some helpers to edit mode
-    map <leader>ew :e %%
-    map <leader>es :vsp %%
-
     " Adjust viewports to the same size
     map <Leader>= <C-w>=
 
-    " Map <Leader>ff to display all lines with keyword under cursor
-    " and ask which one to jump to
-    nmap <Leader>ff [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
 " }
 
 " Plugins {
 
     " Nord {
         if isdirectory(expand("~/.vim/plugged/nord-vim"))
+            let g:nord_cursor_line_number_background = 1
             colorscheme nord
-            " colorscheme gruvbox
         endif
     " }
 
     " NerdTree {
         if isdirectory(expand("~/.vim/plugged/nerdtree"))
             map <C-e> :NERDTreeToggle<CR>
-            map <leader>e :NERDTreeFind<CR>
-            nmap <leader>nt :NERDTreeFind<CR>
+            map <leader>ee :NERDTreeFind<CR>
+            map ,e :NERDTreeFind<CR>
 
             let NERDTreeShowBookmarks = 1
             let NERDTreeIgnore = ['\.py[cd]$', '\~$', '\.swo$', '\.swp$', '^\.git$', '^\.hg$', '^\.svn$', '\.bzr$']
@@ -246,6 +231,15 @@
             let NERDTreeShowHidden = 1
             let NERDTreeKeepTreeInNewTab = 1
             let g:nerdtree_tabs_open_on_gui_startup = 0
+            let NERDTreeDirArrowExpandable = "\u00a0"
+            let NERDTreeDirArrowCollapsible = "\u00a0"
+            let NERDTreeNodeDelimiter = "\x07"
+        endif
+    " }
+
+    " Devicons {
+        if isdirectory(expand("~/.vim/plugged/vim-devicons"))
+            let g:DevIconsEnableFoldersOpenClose = 1
         endif
     " }
 
@@ -263,41 +257,86 @@
             endfunction
 
             " coc-prettier
-            vmap <leader>f  <Plug>(coc-format-selected)
-            nmap <leader>f  <Plug>(coc-format-selected)
-            " Fix autofix problem of current line
-            nmap <leader>qf  <Plug>(coc-fix-current)
-        endif
-    " }
+            vmap <leader>fp  <Plug>(coc-format-selected)
+            nmap <leader>fp  <Plug>(coc-format-selected)
 
-    " CtrlP {
-        if isdirectory(expand("~/.vim/plugged/ctrlp.vim"))
-            let g:ctrlp_working_path_mode = 'ra'
-            let g:ctrlp_mruf_relative = 1
-            nnoremap <Leader>b :CtrlPBuffer<CR>
-            let g:ctrlp_custom_ignore = {
-                \ 'dir':  '\.git$\|\.hg$\|\.svn$|node_modules$',
-                \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
+            " Remap keys for gotos
+            nmap <silent> gd <Plug>(coc-definition)
 
-            if executable('rg')
-                let s:ctrlp_fallback = 'rg %s --files --color=never --glob ""'
-            elseif executable('ag')
-                let s:ctrlp_fallback = 'ag %s --nocolor -l -g ""'
-            elseif executable('ack-grep')
-                let s:ctrlp_fallback = 'ack-grep %s --nocolor -f'
-            elseif executable('ack')
-                let s:ctrlp_fallback = 'ack %s --nocolor -f'
-            else
-                let s:ctrlp_fallback = 'find %s -type f'
-            endif
+            augroup mygroup
+                autocmd!
+                " Setup formatexpr specified filetype(s).
+                autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+                " Update signature help on jump placeholder
+                autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+            augroup end
 
-            let g:ctrlp_user_command = {
-                \ 'types': {
-                    \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
-                    \ 2: ['.hg', 'hg --cwd %s locate -I .'],
-                \ },
-                \ 'fallback': s:ctrlp_fallback
-            \ }
+            " Use K to show documentation in preview window
+            nnoremap <silent> K :call <SID>show_documentation()<CR>
+            function! s:show_documentation()
+                if (index(['vim','help'], &filetype) >= 0)
+                    execute 'h '.expand('<cword>')
+                else
+                    call CocAction('doHover')
+                endif
+            endfunction
+
+            " Use `:Format` to format current buffer
+            command! -nargs=0 Format :call CocAction('format')
+
+            " use `:OR` for organize import of current buffer
+            command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
+
+            " Using CocList
+            nnoremap <silent> ,p  :<C-u>CocListResume<CR>
+
+            " grep word under cursor
+            command! -nargs=+ -complete=custom,s:GrepArgs Rg exe 'CocList grep '.<q-args>
+
+            function! s:GrepArgs(...)
+                let list = ['-S', '-smartcase', '-i', '-ignorecase', '-w', '-word',
+                            \ '-e', '-regex', '-u', '-skip-vcs-ignores', '-t', '-extension']
+                return join(list, "\n")
+            endfunction
+
+            " Keymapping for grep word under cursor with interactive mode
+            nnoremap <silent> <Leader>cf :exe 'CocList -I --input='.expand('<cword>').' grep'<CR>
+
+            function! s:GrepFromSelected(type)
+                let saved_unnamed_register = @@
+                if a:type ==# 'v'
+                    normal! `<v`>y
+                elseif a:type ==# 'char'
+                    normal! `[v`]y
+                else
+                    return
+                endif
+                let word = substitute(@@, '\n$', '', 'g')
+                let word = escape(word, '| ')
+                let @@ = saved_unnamed_register
+                execute 'CocList grep '.word
+            endfunction
+
+            nnoremap <silent> <space>w  :exe 'CocList -I --normal --input='.expand('<cword>').' words'<CR>
+
+            nnoremap <Leader>ll :CocList<Space>
+            nnoremap <Leader>lb :CocList buffers<CR>
+            nnoremap <Leader>lm :CocList mru<CR>
+            nnoremap <Leader>lf :CocList files<CR>
+            nnoremap <Leader>lg :CocList grep<CR>
+
+            " navigate chunks of current buffer
+            nmap [g <Plug>(coc-git-prevchunk)
+            nmap ]g <Plug>(coc-git-nextchunk)
+            " show chunk diff at current position
+            nmap gs <Plug>(coc-git-chunkinfo)
+            " show commit contains current position
+            nmap gc <Plug>(coc-git-commit)
+            " create text object for git chunks
+            omap ig <Plug>(coc-git-chunk-inner)
+            xmap ig <Plug>(coc-git-chunk-inner)
+            omap ag <Plug>(coc-git-chunk-outer)
+            xmap ag <Plug>(coc-git-chunk-outer)
         endif
     " }
 
@@ -315,23 +354,11 @@
         endif
     " }
 
-    " Ack {
-        if isdirectory(expand("~/.vim/plugged/ack.vim"))
-            if executable('rg')
-                let g:ackprg = 'rg --vimgrep --no-heading'
-            elseif executable('ag')
-                let g:ackprg = 'ag --nogroup --nocolor --column --smart-case'
-            elseif executable('ack-grep')
-                let g:ackprg = "ack-grep -H --nocolor --nogroup --column"
-            endif
-            nnoremap <Leader>a :Ack!<Space>
-        endif
-    " }
-
     " Airline {
         if isdirectory(expand("~/.vim/plugged/vim-airline"))
             let g:airline_powerline_fonts = 1
             let g:airline_theme = 'nord'
+            let g:airline#extensions#coc#enabled = 1
         endif
     " }
 
@@ -345,38 +372,6 @@
             endif
             nnoremap <Leader>u :UndotreeToggle<CR>
             let g:undotree_SetFocusWhenToggle = 1
-        endif
-    " }
-
-    " Markdown {
-        if isdirectory(expand("~/.vim/plugged/markdown-preview.vim"))
-            nmap <silent> <F8> <Plug>MarkdownPreview        " 普通模式
-            imap <silent> <F8> <Plug>MarkdownPreview        " 插入模式
-            nmap <silent> <F9> <Plug>StopMarkdownPreview    " 普通模式
-            imap <silent> <F9> <Plug>StopMarkdownPreview    " 插入模式
-        endif
-    " }
-
-    " Fugitive {
-        if isdirectory(expand("~/.vim/plugged/vim-fugitive"))
-            nnoremap <silent> <leader>gs :Gstatus<CR>
-            nnoremap <silent> <leader>gd :Gdiff<CR>
-        endif
-    " }
-
-    " Gitgutter {
-        if isdirectory(expand("~/.vim/plugged/vim-gitgutter"))
-            nmap <leader>hn <Plug>(GitGutterNextHunk)
-            nmap <leader>hp <Plug>(GitGutterPrevHunk)
-            nmap <leader>hs <Plug>(GitGutterStageHunk)
-            nmap <leader>hu <Plug>(GitGutterUndoHunk)
-            nmap <leader>hv <Plug>(GitGutterPreviewHunk)
-        endif
-    " }
-
-    " Gv {
-        if isdirectory(expand("~/.vim/plugged/gv.vim"))
-            nnoremap <silent> <leader>gv :GV<CR>
         endif
     " }
 
@@ -417,6 +412,13 @@
     " IndentLine {
         if isdirectory(expand("~/.vim/plugged/indentLine"))
             let g:vim_json_syntax_conceal = 0
+        endif
+    " }
+
+    " JsDoc {
+        if isdirectory(expand("~/.vim/plugged/vim-jsdoc"))
+            let g:jsdoc_enable_es6 = 1
+            nmap <silent> <leader>jd <Plug>(jsdoc)
         endif
     " }
 

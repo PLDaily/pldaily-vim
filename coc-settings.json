@@ -1,4 +1,7 @@
 {
     "tslint.autoFixOnSave": false,
-    "tsserver.enableJavascript": false
+    "tsserver.enableJavascript": false,
+    "eslint.enable": false,
+    "eslint.autoFixOnSave": true,
+    "git.enableGutters": true
 }
