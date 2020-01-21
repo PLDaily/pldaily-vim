@@ -23,11 +23,34 @@
 
 " Use plug config {
 
-    let g:pldaily_plug_groups = ['general', 'markdown', 'html', 'css', 'javascript']
+    let g:pldaily_plug_groups = [
+                \   'general',
+                \   'markdown',
+                \   'html',
+                \   'css',
+                \   'javascript',
+                \   'golang'
+                \ ]
+    let g:coc_global_extensions = [
+                \   'coc-html',
+                \   'coc-css',
+                \   'coc-json',
+                \   'coc-yank',
+                \   'coc-tabnine',
+                \   'coc-tslint-plugin',
+                \   'coc-stylelint',
+                \   'coc-git',
+                \   'coc-marketplace',
+                \   'coc-lists',
+                \   'coc-vetur',
+                \   'coc-eslint',
+                \   'coc-prettier',
+                \   'coc-tsserver'
+                \ ]
 
     call plug#begin('~/.vim/plugged')
 
-    " General {
+    " General { 
         if count(g:pldaily_plug_groups, 'general')
             Plug 'scrooloose/nerdtree'
             Plug 'vim-airline/vim-airline'
@@ -39,9 +62,10 @@
             Plug 'raimondi/delimitMate'
             Plug 'tpope/vim-surround'
             Plug 'tpope/vim-repeat'
-            " Plug 'kshenoy/vim-signature'
             Plug 'christoomey/vim-tmux-navigator'
             Plug 'easymotion/vim-easymotion'
+            Plug 'psliwka/vim-smoothie'
+            " Plug 'kshenoy/vim-signature'
             " Plug 'scrooloose/im-slumlord'
             " Plug 'aklt/plantuml-syntax'
         endif
@@ -167,8 +191,8 @@
     " The default leader is ' '
     let mapleader = ' '
 
-    " The default local leader is '_'
-    let maplocalleader = '_'
+    " The default local leader is ','
+    let maplocalleader = ','
 
     " editing the configuration
     let s:pldaily_edit_config_mapping = '<leader>ev'
@@ -183,7 +207,8 @@
     nmap <C-H> <C-W>h
 
     " Switch next buffer
-    nmap <leader>bn :bNext<CR>
+    nmap <leader>bp :bp<CR>
+    nmap <leader>bn :bn<CR>
 
     " Wrapped lines goes down/up to next row, rather than next line in file.
     noremap j gj
@@ -220,8 +245,7 @@
     " NerdTree {
         if isdirectory(expand("~/.vim/plugged/nerdtree"))
             map <C-e> :NERDTreeToggle<CR>
-            map <leader>ee :NERDTreeFind<CR>
-            map ,e :NERDTreeFind<CR>
+            map <localleader>e :NERDTreeFind<CR>
 
             let NERDTreeShowBookmarks = 1
             let NERDTreeIgnore = ['\.py[cd]$', '\~$', '\.swo$', '\.swp$', '^\.git$', '^\.hg$', '^\.svn$', '\.bzr$']
@@ -263,14 +287,6 @@
             " Remap keys for gotos
             nmap <silent> gd <Plug>(coc-definition)
 
-            augroup mygroup
-                autocmd!
-                " Setup formatexpr specified filetype(s).
-                autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-                " Update signature help on jump placeholder
-                autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-            augroup end
-
             " Use K to show documentation in preview window
             nnoremap <silent> K :call <SID>show_documentation()<CR>
             function! s:show_documentation()
@@ -288,43 +304,21 @@
             command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
 
             " Using CocList
-            nnoremap <silent> ,p  :<C-u>CocListResume<CR>
-
-            " grep word under cursor
-            command! -nargs=+ -complete=custom,s:GrepArgs Rg exe 'CocList grep '.<q-args>
-
-            function! s:GrepArgs(...)
-                let list = ['-S', '-smartcase', '-i', '-ignorecase', '-w', '-word',
-                            \ '-e', '-regex', '-u', '-skip-vcs-ignores', '-t', '-extension']
-                return join(list, "\n")
-            endfunction
+            " Resume latest coc list
+            nnoremap <silent> <localleader>p  :<C-u>CocListResume<CR>
 
             " Keymapping for grep word under cursor with interactive mode
             nnoremap <silent> <Leader>cf :exe 'CocList -I --input='.expand('<cword>').' grep'<CR>
 
-            function! s:GrepFromSelected(type)
-                let saved_unnamed_register = @@
-                if a:type ==# 'v'
-                    normal! `<v`>y
-                elseif a:type ==# 'char'
-                    normal! `[v`]y
-                else
-                    return
-                endif
-                let word = substitute(@@, '\n$', '', 'g')
-                let word = escape(word, '| ')
-                let @@ = saved_unnamed_register
-                execute 'CocList grep '.word
-            endfunction
+            nnoremap <silent> <Leader>w  :exe 'CocList -I --normal --input='.expand('<cword>').' words'<CR>
 
-            nnoremap <silent> <space>w  :exe 'CocList -I --normal --input='.expand('<cword>').' words'<CR>
-
-            nnoremap <Leader>ll :CocList<Space>
+            nnoremap <Leader>ll :CocList<CR>
             nnoremap <Leader>lb :CocList buffers<CR>
             nnoremap <Leader>lm :CocList mru<CR>
             nnoremap <Leader>lf :CocList files<CR>
             nnoremap <Leader>lg :CocList grep<CR>
 
+            " Using coc-git
             " navigate chunks of current buffer
             nmap [g <Plug>(coc-git-prevchunk)
             nmap ]g <Plug>(coc-git-nextchunk)
@@ -387,19 +381,10 @@
 
     " Go {
         if isdirectory(expand("~/.vim/plugged/vim-go"))
-            let g:go_highlight_functions = 1
-            let g:go_version_warning = 0
-            let g:go_highlight_methods = 1
-            let g:go_highlight_structs = 1
-            let g:go_highlight_operators = 1
-            let g:go_highlight_build_constraints = 1
-            let g:go_fmt_command = "goimports"
-            let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
-            let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
-            au FileType go nmap <Leader>im <Plug>(go-imports)
-            au FileType go nmap <leader>in <Plug>(go-install)
+            " build       compile packages and dependencies
+            " install     compile and install packages and dependencies
+            au FileType go nmap <leader>gi <Plug>(go-install)
             au FileType go nmap <leader>gr <Plug>(go-run)
-            au FileType go nmap <leader>gb <Plug>(go-build)
         endif
     " }
 
@@ -418,6 +403,7 @@
     " JsDoc {
         if isdirectory(expand("~/.vim/plugged/vim-jsdoc"))
             let g:jsdoc_enable_es6 = 1
+            let g:jsdoc_return = 0
             nmap <silent> <leader>jd <Plug>(jsdoc)
         endif
     " }

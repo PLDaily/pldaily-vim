@@ -1,7 +1,24 @@
 {
-    "tslint.autoFixOnSave": false,
-    "tsserver.enableJavascript": false,
-    "eslint.enable": false,
-    "eslint.autoFixOnSave": true,
-    "git.enableGutters": true
+  "tslint.autoFixOnSave": false,
+  "tsserver.enableJavascript": false,
+  "eslint.enable": false,
+  "eslint.autoFixOnSave": true,
+  "git.enableGutters": true,
+  "languageserver": {
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["go"]
+    },
+    "clojure-lsp": {
+      "command": "bash",
+      "args": ["-c", "clojure-lsp"],
+      "filetypes": ["clojure"],
+      "rootPatterns": ["project.clj"],
+      "additionalSchemes": ["jar", "zipfile"],
+      "trace.server": "verbose",
+      "initializationOptions": {
+      }
+    }
+  }
 }
