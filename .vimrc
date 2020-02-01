@@ -65,6 +65,7 @@
             Plug 'christoomey/vim-tmux-navigator'
             Plug 'easymotion/vim-easymotion'
             Plug 'psliwka/vim-smoothie'
+            Plug 'terryma/vim-multiple-cursors'
             " Plug 'kshenoy/vim-signature'
             " Plug 'scrooloose/im-slumlord'
             " Plug 'aklt/plantuml-syntax'
@@ -263,6 +264,9 @@
 
     " Devicons {
         if isdirectory(expand("~/.vim/plugged/vim-devicons"))
+            if exists("g:loaded_webdevicons")
+                call webdevicons#refresh()
+            endif
             let g:DevIconsEnableFoldersOpenClose = 1
         endif
     " }
