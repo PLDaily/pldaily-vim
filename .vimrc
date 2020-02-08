@@ -45,12 +45,13 @@
                 \   'coc-vetur',
                 \   'coc-eslint',
                 \   'coc-prettier',
+                \   'coc-terminal',
                 \   'coc-tsserver'
                 \ ]
 
     call plug#begin('~/.vim/plugged')
 
-    " General { 
+    " General {
         if count(g:pldaily_plug_groups, 'general')
             Plug 'scrooloose/nerdtree'
             Plug 'vim-airline/vim-airline'
@@ -120,10 +121,6 @@
 " General {
 
     set background=dark         " Assume a dark background
-    set guioptions-=r           " remove right-hand scroll bar
-    set guioptions-=l           " remove left-hand scroll bar
-    set guioptions-=L           " remove left-hand scroll bar even if there is a vertical split
-    set guioptions-=b           " remove bottom scroll bar
 
     filetype plugin indent on   " Automatically detect file types.
     syntax on                   " Syntax highlighting
@@ -134,6 +131,7 @@
     set clipboard=unnamed
 
     set suffixesadd=.ts,.js,.tsx,.jsx,.json   "gf extensions
+
     set foldmethod=indent
     set nofoldenable
     set foldlevel=99
@@ -147,26 +145,12 @@
 
     set guifont=MesloLGLNerdFontComplete-Regular:h15
 
-    set tabpagemax=15               " Only show 15 tabs
-    set showmode                    " Display the current mode
     set scrolloff=3                 " scroll when 3 line
-
     set cursorline                  " Highlight current line
-
-    highlight clear SignColumn      " SignColumn should match background
-    highlight clear LineNr          " Current line number row will have same background color in relative mode
-
-    set backspace=indent,eol,start  " Backspace for dummies
-    set linespace=0                 " No extra spaces between rows
     set number                      " Line numbers on
     set relativenumber              " Line relative number on
-    set showmatch                   " Show matching brackets/parenthesis
-    set incsearch                   " Find as you type search
-    set hlsearch                    " Highlight search terms
-    set winminheight=0              " Windows can be 0 line high
     set ignorecase                  " Case insensitive search
     set smartcase                   " Case sensitive when uc present
-    set wildmenu                    " Show list instead of just completing
 
 " }
 
@@ -178,8 +162,6 @@
     set expandtab                   " Tabs are spaces, not tabs
     set tabstop=4                   " An indentation every four columns
     set softtabstop=4               " Let backspace delete indent
-    set splitright                  " Puts new vsplit windows to the right of the current
-    set splitbelow                  " Puts new split windows to the bottom of the current
 
     autocmd BufNewFile,BufRead *.tsx set syntax=typescript
     autocmd BufNewFile,BufRead *.mdx set filetype=mdx syntax=markdown
@@ -286,10 +268,11 @@
 
             " coc-prettier
             vmap <leader>fp  <Plug>(coc-format-selected)
-            nmap <leader>fp  <Plug>(coc-format-selected)
 
             " Remap keys for gotos
             nmap <silent> gd <Plug>(coc-definition)
+            nmap <silent> gj <Plug>(coc-float-jump)
+            nmap <silent> gt <Plug>(coc-terminal-toggle)
 
             " Use K to show documentation in preview window
             nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -321,6 +304,8 @@
             nnoremap <Leader>lm :CocList mru<CR>
             nnoremap <Leader>lf :CocList files<CR>
             nnoremap <Leader>lg :CocList grep<CR>
+            nnoremap <Leader>lc :CocList commands<CR>
+            nnoremap <Leader>ld :CocList diagnostics<CR>
 
             " Using coc-git
             " navigate chunks of current buffer
