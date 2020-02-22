@@ -67,9 +67,7 @@
             Plug 'easymotion/vim-easymotion'
             Plug 'psliwka/vim-smoothie'
             Plug 'terryma/vim-multiple-cursors'
-            " Plug 'kshenoy/vim-signature'
-            " Plug 'scrooloose/im-slumlord'
-            " Plug 'aklt/plantuml-syntax'
+            Plug 'itchyny/calendar.vim'
         endif
     " }
 
@@ -96,7 +94,7 @@
             Plug 'elzr/vim-json'
             Plug 'leafgarland/typescript-vim'
             Plug 'neoclide/coc.nvim', {'branch': 'release'}
-            Plug 'posva/vim-vue'
+            Plug 'posva/vim-vue', { 'for': 'vue' }
             Plug 'isRuslan/vim-es6'
             Plug 'heavenshell/vim-jsdoc'
         endif
@@ -104,7 +102,7 @@
 
     " GoLang {
         if count(g:pldaily_plug_groups, 'golang')
-            Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+            Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
         endif
     " }
 
@@ -162,6 +160,8 @@
     set expandtab                   " Tabs are spaces, not tabs
     set tabstop=4                   " An indentation every four columns
     set softtabstop=4               " Let backspace delete indent
+    set splitright                  " Puts new vsplit windows to the right of the current
+    set splitbelow                  " Puts new split windows to the bottom of the current
 
     autocmd BufNewFile,BufRead *.tsx set syntax=typescript
     autocmd BufNewFile,BufRead *.mdx set filetype=mdx syntax=markdown
@@ -190,8 +190,8 @@
     nmap <C-H> <C-W>h
 
     " Switch next buffer
-    nmap <leader>bp :bp<CR>
-    nmap <leader>bn :bn<CR>
+    nmap [b :bp<CR>
+    nmap ]b :bn<CR>
 
     " Wrapped lines goes down/up to next row, rather than next line in file.
     noremap j gj
@@ -213,6 +213,10 @@
 
     " Adjust viewports to the same size
     map <Leader>= <C-w>=
+
+    " quick jump line begin and end
+    noremap H ^
+    noremap L $
 
 " }
 
@@ -268,11 +272,20 @@
 
             " coc-prettier
             vmap <leader>fp  <Plug>(coc-format-selected)
+            nmap <leader>fq  <Plug>(coc-fix-current)
+
+            " Symbol renaming.
+            nmap <leader>rn <Plug>(coc-rename)
 
             " Remap keys for gotos
             nmap <silent> gd <Plug>(coc-definition)
             nmap <silent> gj <Plug>(coc-float-jump)
+            " use <C-\><C-n> exit terminal mode
             nmap <silent> gt <Plug>(coc-terminal-toggle)
+
+            " navigate diagnostics
+            nmap <silent> ]d <Plug>(coc-diagnostic-next)
+            nmap <silent> [d <Plug>(coc-diagnostic-prev)
 
             " Use K to show documentation in preview window
             nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -306,6 +319,9 @@
             nnoremap <Leader>lg :CocList grep<CR>
             nnoremap <Leader>lc :CocList commands<CR>
             nnoremap <Leader>ld :CocList diagnostics<CR>
+            nnoremap <Leader>lo :CocList outline<CR>
+            nnoremap <Leader>le :CocList extensions<CR>
+            nnoremap <Leader>ls :CocList symbols<CR>
 
             " Using coc-git
             " navigate chunks of current buffer
@@ -386,6 +402,7 @@
     " IndentLine {
         if isdirectory(expand("~/.vim/plugged/indentLine"))
             let g:vim_json_syntax_conceal = 0
+            let g:indentLine_fileTypeExclude = ['calendar']
         endif
     " }
 
@@ -433,6 +450,20 @@
     function! s:EditSpf13Config()
         call <SID>ExpandFilenameAndExecute("tabedit", "~/.vimrc")
     endfunction
+
+    function! s:ZoomToggle() abort
+        if exists('t:zoomed') && t:zoomed
+            execute t:zoom_winrestcmd
+            let t:zoomed = 0
+        else
+            let t:zoom_winrestcmd = winrestcmd()
+            resize
+            vertical resize
+            let t:zoomed = 1
+        endif
+    endfunction
+    command! ZoomToggle call s:ZoomToggle()
+    nnoremap <silent> <Leader>z :ZoomToggle<CR>
 
     execute "noremap " . s:pldaily_edit_config_mapping " :call <SID>EditSpf13Config()<CR>"
     execute "noremap " . s:pldaily_apply_config_mapping . " :source ~/.vimrc<CR>"
