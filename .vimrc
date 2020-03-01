@@ -31,6 +31,7 @@
                 \   'javascript',
                 \   'golang'
                 \ ]
+
     let g:coc_global_extensions = [
                 \   'coc-html',
                 \   'coc-css',
@@ -46,6 +47,7 @@
                 \   'coc-eslint',
                 \   'coc-prettier',
                 \   'coc-terminal',
+                \   'coc-smartf',
                 \   'coc-tsserver'
                 \ ]
 
@@ -64,7 +66,6 @@
             Plug 'tpope/vim-surround'
             Plug 'tpope/vim-repeat'
             Plug 'christoomey/vim-tmux-navigator'
-            Plug 'easymotion/vim-easymotion'
             Plug 'psliwka/vim-smoothie'
             Plug 'terryma/vim-multiple-cursors'
             Plug 'itchyny/calendar.vim'
@@ -142,6 +143,11 @@
 " Vim UI {
 
     set guifont=MesloLGLNerdFontComplete-Regular:h15
+
+    set guioptions-=r               " remove right-hand scroll bar
+    set guioptions-=l               " remove left-hand scroll bar
+    set guioptions-=L               " remove left-hand scroll bar even if there is a vertical split
+    set guioptions-=b               " remove bottom scroll bar
 
     set scrolloff=3                 " scroll when 3 line
     set cursorline                  " Highlight current line
@@ -310,7 +316,7 @@
             " Keymapping for grep word under cursor with interactive mode
             nnoremap <silent> <Leader>cf :exe 'CocList -I --input='.expand('<cword>').' grep'<CR>
 
-            nnoremap <silent> <Leader>w  :exe 'CocList -I --normal --input='.expand('<cword>').' words'<CR>
+            nnoremap <silent> <Leader>w  :exe 'CocList -I --input='.expand('<cword>').' words'<CR>
 
             nnoremap <Leader>ll :CocList<CR>
             nnoremap <Leader>lb :CocList buffers<CR>
@@ -322,6 +328,7 @@
             nnoremap <Leader>lo :CocList outline<CR>
             nnoremap <Leader>le :CocList extensions<CR>
             nnoremap <Leader>ls :CocList symbols<CR>
+            nnoremap <Leader>lw :CocList words<CR>
 
             " Using coc-git
             " navigate chunks of current buffer
@@ -336,6 +343,16 @@
             xmap ig <Plug>(coc-git-chunk-inner)
             omap ag <Plug>(coc-git-chunk-outer)
             xmap ag <Plug>(coc-git-chunk-outer)
+
+            " Using coc-smartf
+            " press <esc> to cancel.
+            nmap f <Plug>(coc-smartf-forward)
+            nmap F <Plug>(coc-smartf-backward)
+
+            augroup Smartf
+              autocmd User SmartfEnter :hi Conceal ctermfg=200 guifg=#6638F0
+              autocmd User SmartfLeave :hi Conceal ctermfg=239 guifg=#504945
+            augroup end
         endif
     " }
 
@@ -436,6 +453,12 @@
                     let g:ft = ''
                 endif
             endfunction
+        endif
+    " }
+
+    " Calendar {
+        if isdirectory(expand("~/.vim/plugged/calendar.vim"))
+            let g:calendar_task_delete = 1
         endif
     " }
 

@@ -4,6 +4,8 @@
   "eslint.enable": false,
   "eslint.autoFixOnSave": true,
   "git.enableGutters": true,
+  "smartf.timeout": 3000,
+  "smartf.jumpOnTrigger": false, 
   "languageserver": {
     "golang": {
       "command": "gopls",
