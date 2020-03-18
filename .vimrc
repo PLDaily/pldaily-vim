@@ -39,7 +39,7 @@
                 \   'coc-yank',
                 \   'coc-tabnine',
                 \   'coc-tslint-plugin',
-                \   'coc-stylelint',
+                \   'coc-cssmodules',
                 \   'coc-git',
                 \   'coc-marketplace',
                 \   'coc-lists',
@@ -69,6 +69,7 @@
             Plug 'psliwka/vim-smoothie'
             Plug 'terryma/vim-multiple-cursors'
             Plug 'itchyny/calendar.vim'
+            Plug 'dhruvasagar/vim-zoom'
         endif
     " }
 
@@ -267,9 +268,9 @@
         if isdirectory(expand("~/.vim/plugged/coc.nvim"))
             " 使用 `<TAB>` 切换
             inoremap <silent><expr> <TAB>
-                  \ pumvisible() ? "\<C-n>" :
-                  \ <SID>check_back_space() ? "\<TAB>" :
-                  \ coc#refresh()
+                        \ pumvisible() ? "\<C-n>" :
+                        \ <SID>check_back_space() ? "\<TAB>" :
+                        \ coc#refresh()
             inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
             function! s:check_back_space() abort
                 let col = col('.') - 1
@@ -279,6 +280,7 @@
             " coc-prettier
             vmap <leader>fp  <Plug>(coc-format-selected)
             nmap <leader>fq  <Plug>(coc-fix-current)
+            nmap <leader>fs  <Plug>(coc-codeaction)
 
             " Symbol renaming.
             nmap <leader>rn <Plug>(coc-rename)
@@ -462,6 +464,12 @@
         endif
     " }
 
+    " Zoom {
+        if isdirectory(expand("~/.vim/plugged/vim-zoom"))
+            nmap <Leader>z <C-w>m
+        endif
+    " }
+
 " }
 
 " Functions {
@@ -473,20 +481,6 @@
     function! s:EditSpf13Config()
         call <SID>ExpandFilenameAndExecute("tabedit", "~/.vimrc")
     endfunction
-
-    function! s:ZoomToggle() abort
-        if exists('t:zoomed') && t:zoomed
-            execute t:zoom_winrestcmd
-            let t:zoomed = 0
-        else
-            let t:zoom_winrestcmd = winrestcmd()
-            resize
-            vertical resize
-            let t:zoomed = 1
-        endif
-    endfunction
-    command! ZoomToggle call s:ZoomToggle()
-    nnoremap <silent> <Leader>z :ZoomToggle<CR>
 
     execute "noremap " . s:pldaily_edit_config_mapping " :call <SID>EditSpf13Config()<CR>"
     execute "noremap " . s:pldaily_apply_config_mapping . " :source ~/.vimrc<CR>"
