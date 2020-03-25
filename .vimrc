@@ -97,7 +97,9 @@
             Plug 'leafgarland/typescript-vim'
             Plug 'neoclide/coc.nvim', {'branch': 'release'}
             Plug 'posva/vim-vue', { 'for': 'vue' }
-            Plug 'isRuslan/vim-es6'
+            Plug 'pangloss/vim-javascript'
+            Plug 'mxw/vim-jsx'
+            Plug 'lucasecdb/vim-tsx'
             Plug 'heavenshell/vim-jsdoc'
         endif
     " }
@@ -170,9 +172,10 @@
     set splitright                  " Puts new vsplit windows to the right of the current
     set splitbelow                  " Puts new split windows to the bottom of the current
 
-    autocmd BufNewFile,BufRead *.tsx set syntax=typescript
+    autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx syntax=typescript.tsx
+    autocmd BufNewFile,BufRead *.jsx set filetype=javascript.jsx syntax=javascript.jsx
     autocmd BufNewFile,BufRead *.mdx set filetype=mdx syntax=markdown
-    autocmd FileType html,css,scss,less,javascript,typescript,json,typescriptreact,vue,mdx,yaml setlocal tabstop=2 shiftwidth=2 softtabstop=2
+    autocmd FileType html,css,scss,less,javascript,typescript,json,javascript.jsx,typescript.tsx,vue,mdx,yaml setlocal tabstop=2 shiftwidth=2 softtabstop=2
 
 " }
 
@@ -362,6 +365,10 @@
         if isdirectory(expand("~/.vim/plugged/nerdcommenter"))
             " Add spaces after comment delimiters by default
             let g:NERDSpaceDelims = 1
+            let g:NERDCustomDelimiters = {
+                        \   'typescript.tsx': { 'left': '//', 'leftAlt': '{/*', 'rightAlt': '*/}' },
+                        \   'javascript.jsx': { 'left': '//', 'leftAlt': '{/*', 'rightAlt': '*/}' },
+                        \ }
         endif
     " }
 
@@ -461,6 +468,7 @@
     " Calendar {
         if isdirectory(expand("~/.vim/plugged/calendar.vim"))
             let g:calendar_task_delete = 1
+            nnoremap :Ca :Calendar<CR>
         endif
     " }
 
