@@ -26,7 +26,6 @@
     let g:pldaily_plug_groups = [
                 \   'general',
                 \   'markdown',
-                \   'html',
                 \   'css',
                 \   'javascript',
                 \   'golang'
@@ -34,6 +33,7 @@
 
     let g:coc_global_extensions = [
                 \   'coc-html',
+                \   'coc-emmet',
                 \   'coc-css',
                 \   'coc-json',
                 \   'coc-yank',
@@ -79,12 +79,6 @@
         endif
     " }
 
-    " Html {
-        if count(g:pldaily_plug_groups, 'html')
-            Plug 'mattn/emmet-vim'
-        endif
-    " }
-
     " Css {
         if count(g:pldaily_plug_groups, 'css')
             Plug 'cakebaker/scss-syntax.vim'
@@ -99,7 +93,7 @@
             Plug 'posva/vim-vue', { 'for': 'vue' }
             Plug 'pangloss/vim-javascript'
             Plug 'mxw/vim-jsx'
-            Plug 'lucasecdb/vim-tsx'
+            Plug 'peitalin/vim-jsx-typescript', { 'commit': '671befd0f585534fad7d319ed250f6a4c952efbb' }
             Plug 'heavenshell/vim-jsdoc'
         endif
     " }
@@ -241,6 +235,7 @@
 
     " NerdTree {
         if isdirectory(expand("~/.vim/plugged/nerdtree"))
+            " using :NERDTree restart NERDTree
             map <C-e> :NERDTreeToggle<CR>
             map <localleader>e :NERDTreeFind<CR>
 
@@ -269,7 +264,7 @@
 
     " Coc.nvim {
         if isdirectory(expand("~/.vim/plugged/coc.nvim"))
-            " 使用 `<TAB>` 切换
+            " using `<TAB>`
             inoremap <silent><expr> <TAB>
                         \ pumvisible() ? "\<C-n>" :
                         \ <SID>check_back_space() ? "\<TAB>" :
@@ -292,6 +287,7 @@
             nmap <silent> gd <Plug>(coc-definition)
             nmap <silent> gj <Plug>(coc-float-jump)
             " use <C-\><C-n> exit terminal mode
+            tnoremap <Esc> <C-\><C-n>
             nmap <silent> gt <Plug>(coc-terminal-toggle)
 
             " navigate diagnostics
@@ -400,16 +396,6 @@
         endif
     " }
 
-    " Emmet {
-        if isdirectory(expand("~/.vim/plugged/emmet-vim"))
-            " https://github.com/mattn/emmet-vim/blob/master/doc/emmet.txt
-            " html:5 <c-y>, 生成 html5 骨架
-            " <C-y>, 生成标签
-            " <C-y>j 切换成自闭合标签
-            let g:user_emmet_leader_key = '<C-Y>'
-        endif
-    " }
-
     " Go {
         if isdirectory(expand("~/.vim/plugged/vim-go"))
             " build       compile packages and dependencies
@@ -442,7 +428,7 @@
 
     " Vue {
         if isdirectory(expand("~/.vim/plugged/vim-vue"))
-            " vue 下 NERDCommenter 配置
+            " vue NERDCommenter config 
             let g:ft = ''
             function! NERDCommenter_before()
                 if &ft == 'vue'
