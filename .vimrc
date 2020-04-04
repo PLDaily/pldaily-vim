@@ -291,8 +291,8 @@
             nmap <silent> gt <Plug>(coc-terminal-toggle)
 
             " navigate diagnostics
-            nmap <silent> ]d <Plug>(coc-diagnostic-next)
-            nmap <silent> [d <Plug>(coc-diagnostic-prev)
+            nmap <silent> ]d <Plug>(coc-diagnostic-next-error)
+            nmap <silent> [d <Plug>(coc-diagnostic-prev-error)
 
             " Use K to show documentation in preview window
             nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -428,7 +428,7 @@
 
     " Vue {
         if isdirectory(expand("~/.vim/plugged/vim-vue"))
-            " vue NERDCommenter config 
+            " vue NERDCommenter config
             let g:ft = ''
             function! NERDCommenter_before()
                 if &ft == 'vue'
