@@ -94,7 +94,6 @@
             Plug 'pangloss/vim-javascript'
             Plug 'mxw/vim-jsx'
             Plug 'peitalin/vim-jsx-typescript', { 'commit': '671befd0f585534fad7d319ed250f6a4c952efbb' }
-            Plug 'heavenshell/vim-jsdoc'
         endif
     " }
 
@@ -184,7 +183,7 @@
     " editing the configuration
     let s:pldaily_edit_config_mapping = '<leader>ev'
 
-    " editing and applying the spf13 configuration
+    " editing and applying the pldaily configuration
     let s:pldaily_apply_config_mapping = '<leader>sv'
 
     " Easier moving in tabs and windows
@@ -415,14 +414,7 @@
         if isdirectory(expand("~/.vim/plugged/indentLine"))
             let g:vim_json_syntax_conceal = 0
             let g:indentLine_fileTypeExclude = ['calendar']
-        endif
-    " }
-
-    " JsDoc {
-        if isdirectory(expand("~/.vim/plugged/vim-jsdoc"))
-            let g:jsdoc_enable_es6 = 1
-            let g:jsdoc_return = 0
-            nmap <silent> <leader>jd <Plug>(jsdoc)
+            let g:indentLine_bufTypeExclude = ['help', 'terminal']
         endif
     " }
 
@@ -472,11 +464,11 @@
         execute a:command . " " . expand(a:file, ":p")
     endfunction
 
-    function! s:EditSpf13Config()
+    function! s:EditPldailyConfig()
         call <SID>ExpandFilenameAndExecute("tabedit", "~/.vimrc")
     endfunction
 
-    execute "noremap " . s:pldaily_edit_config_mapping " :call <SID>EditSpf13Config()<CR>"
+    execute "noremap " . s:pldaily_edit_config_mapping " :call <SID>EditPldailyConfig()<CR>"
     execute "noremap " . s:pldaily_apply_config_mapping . " :source ~/.vimrc<CR>"
 
 " }
