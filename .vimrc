@@ -27,8 +27,7 @@
                 \   'general',
                 \   'markdown',
                 \   'css',
-                \   'javascript',
-                \   'golang'
+                \   'javascript'
                 \ ]
 
     let g:coc_global_extensions = [
@@ -55,10 +54,10 @@
 
     " General {
         if count(g:pldaily_plug_groups, 'general')
-            Plug 'scrooloose/nerdtree'
+            Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+            Plug 'kristijanhusak/defx-icons'
             Plug 'vim-airline/vim-airline'
             Plug 'arcticicestudio/nord-vim'
-            Plug 'ryanoasis/vim-devicons'
             Plug 'Yggdroot/indentLine'
             Plug 'mbbill/undotree'
             Plug 'scrooloose/nerdcommenter'
@@ -70,12 +69,14 @@
             Plug 'terryma/vim-multiple-cursors'
             Plug 'itchyny/calendar.vim'
             Plug 'dhruvasagar/vim-zoom'
+            Plug 'matze/vim-move'
         endif
     " }
 
     " Markdown {
         if count(g:pldaily_plug_groups, 'markdown')
             Plug 'hotoo/pangu.vim'
+            Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
         endif
     " }
 
@@ -93,7 +94,7 @@
             Plug 'posva/vim-vue', { 'for': 'vue' }
             Plug 'pangloss/vim-javascript'
             Plug 'mxw/vim-jsx'
-            Plug 'peitalin/vim-jsx-typescript', { 'commit': '671befd0f585534fad7d319ed250f6a4c952efbb' }
+            Plug 'peitalin/vim-jsx-typescript'
         endif
     " }
 
@@ -232,32 +233,64 @@
         endif
     " }
 
-    " NerdTree {
-        if isdirectory(expand("~/.vim/plugged/nerdtree"))
-            " using :NERDTree restart NERDTree
-            map <C-e> :NERDTreeToggle<CR>
-            map <localleader>e :NERDTreeFind<CR>
+    " Defx {
+        if isdirectory(expand("~/.vim/plugged/defx.nvim"))
+            let g:defx_icons_enable_syntax_highlight = 1
+            let g:defx_icons_column_length = 1
+            call defx#custom#option('_', {
+                        \ 'columns': 'space:indent:icons:filename:type',
+                        \ 'winwidth': 30,
+                        \ 'split': 'vertical',
+                        \ 'direction': 'leftabove',
+                        \ 'ignored_files': '*.swp,.git,.svn,.DS_Store',
+                        \ 'show_ignored_files': 0,
+                        \ 'buffer_name': '',
+                        \ 'toggle': 1,
+                        \ 'resume': 1
+                        \ })
 
-            let NERDTreeShowBookmarks = 1
-            let NERDTreeIgnore = ['\.py[cd]$', '\~$', '\.swo$', '\.swp$', '^\.git$', '^\.hg$', '^\.svn$', '\.bzr$']
-            let NERDTreeChDirMode = 0
-            let NERDTreeQuitOnOpen = 0
-            let NERDTreeMouseMode = 2
-            let NERDTreeShowHidden = 1
-            let NERDTreeKeepTreeInNewTab = 1
-            let g:nerdtree_tabs_open_on_gui_startup = 0
-            let NERDTreeDirArrowExpandable = "\u00a0"
-            let NERDTreeDirArrowCollapsible = "\u00a0"
-            let NERDTreeNodeDelimiter = "\x07"
-        endif
-    " }
+            nnoremap <silent> <C-e>
+                        \ :<C-u>Defx -resume -toggle -buffer-name=tab`tabpagenr()`<CR>
+            nnoremap <silent> <localleader>e
+                        \ :<C-u>Defx -resume -buffer-name=tab`tabpagenr()` -search=`expand('%:p')`<CR>
 
-    " Devicons {
-        if isdirectory(expand("~/.vim/plugged/vim-devicons"))
-            if exists("g:loaded_webdevicons")
-                call webdevicons#refresh()
-            endif
-            let g:DevIconsEnableFoldersOpenClose = 1
+            function! s:defx_mappings() abort
+                nnoremap <silent><buffer><expr> o
+                            \ defx#is_directory() ?
+                            \ defx#do_action('open_tree') :
+                            \ defx#do_action('drop')
+
+                nnoremap <silent><buffer><expr> x defx#do_action('close_tree')
+                nnoremap <silent><buffer><expr> s defx#do_action('drop', 'vsplit')
+                nnoremap <silent><buffer><expr> i defx#do_action('drop', 'split')
+                nnoremap <silent><buffer><expr> I defx#do_action('toggle_ignored_files')
+                nnoremap <silent><buffer><expr> j line('.') == line('$') ? 'gg' : 'j'
+                nnoremap <silent><buffer><expr> k line('.') == 1 ? 'G' : 'k'
+                nnoremap <silent><buffer><expr> C defx#do_action('cd', defx#get_candidate().action__path)
+                nnoremap <silent><buffer><expr> u defx#do_action('cd', ['..'])
+                nnoremap <silent><buffer><expr> > defx#do_action('resize', defx#get_context().winwidth + 10)
+                nnoremap <silent><buffer><expr> < defx#do_action('resize', defx#get_context().winwidth - 10)
+                nnoremap <silent><buffer><expr> md defx#do_action('remove')
+                nnoremap <silent><buffer><expr> mm defx#do_action('rename')
+                nnoremap <silent><buffer><expr> ma defx#do_action('new_file')
+                nnoremap <silent><buffer><expr> mr defx#do_action('execute_command', 'open .')
+            endfunction
+
+            " https://github.com/Shougo/defx.nvim/issues/175
+            function! s:open_defx_if_directory()
+                try
+                    let l:full_path = expand(expand('%:p'))
+                catch
+                    return
+                endtry
+
+                if isdirectory(l:full_path)
+                    execute "Defx -split=no -search=`expand('%:p')` | bd " . expand('%:r')
+                endif
+            endfunction
+
+            autocmd FileType defx call s:defx_mappings()
+            autocmd BufEnter * call s:open_defx_if_directory()
         endif
     " }
 
@@ -406,14 +439,24 @@
 
     " Pangu {
         if isdirectory(expand("~/.vim/plugged/pangu.vim"))
-            autocmd BufWritePre *.markdown,*.md,*.text,*.txt,*.wiki,*.cnx call PanGuSpacing()
+            " autocmd BufWritePre *.markdown,*.md,*.text,*.txt,*.wiki,*.cnx call PanGuSpacing()
+            nnoremap <Leader>pg :Pangu<CR>
+        endif
+    " }
+
+    " MarkdownPreview {
+        if isdirectory(expand("~/.vim/plugged/markdown-preview.nvim"))
+            let g:mkdp_open_to_the_world = 1
+            nnoremap <Leader>mp :MarkdownPreview<CR>
         endif
     " }
 
     " IndentLine {
         if isdirectory(expand("~/.vim/plugged/indentLine"))
             let g:vim_json_syntax_conceal = 0
-            let g:indentLine_fileTypeExclude = ['calendar']
+            " defx indentLine_fileTypeExclude not work, using indentLine_fileType replace
+            " let g:indentLine_fileTypeExclude = ['calendar', 'defx']
+            let g:indentLine_fileType = ['typescript', 'javascript', 'javascript.jsx', 'typescript.tsx']
             let g:indentLine_bufTypeExclude = ['help', 'terminal']
         endif
     " }
