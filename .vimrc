@@ -17,6 +17,10 @@
         if !WINDOWS()
             set shell=/bin/sh
         endif
+
+        if exists('+termguicolors')
+            set termguicolors
+        endif
     " }
 
 " }
@@ -47,6 +51,8 @@
                 \   'coc-prettier',
                 \   'coc-terminal',
                 \   'coc-smartf',
+                \   'coc-highlight',
+                \   'coc-imselect',
                 \   'coc-tsserver'
                 \ ]
 
@@ -70,6 +76,7 @@
             Plug 'itchyny/calendar.vim'
             Plug 'dhruvasagar/vim-zoom'
             Plug 'matze/vim-move'
+            Plug 'rhysd/git-messenger.vim'
         endif
     " }
 
@@ -77,6 +84,7 @@
         if count(g:pldaily_plug_groups, 'markdown')
             Plug 'hotoo/pangu.vim'
             Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+            Plug 'vimwiki/vimwiki'
         endif
     " }
 
@@ -222,6 +230,9 @@
     noremap H ^
     noremap L $
 
+    " change root dir
+    nnoremap <leader>cd :cd %:p:h<CR>
+
 " }
 
 " Plugins {
@@ -250,9 +261,9 @@
                         \ })
 
             nnoremap <silent> <C-e>
-                        \ :<C-u>Defx -resume -toggle -buffer-name=tab`tabpagenr()`<CR>
+                        \ :<C-u>Defx -resume -toggle -buffer-name=tab`tabpagenr()` `getcwd()`<CR>
             nnoremap <silent> <localleader>e
-                        \ :<C-u>Defx -resume -buffer-name=tab`tabpagenr()` -search=`expand('%:p')`<CR>
+                        \ :<C-u>Defx -resume -buffer-name=tab`tabpagenr()` -search=`expand('%:p')` `getcwd()`<CR>
 
             function! s:defx_mappings() abort
                 nnoremap <silent><buffer><expr> o
@@ -274,6 +285,7 @@
                 nnoremap <silent><buffer><expr> mm defx#do_action('rename')
                 nnoremap <silent><buffer><expr> ma defx#do_action('new_file')
                 nnoremap <silent><buffer><expr> mr defx#do_action('execute_command', 'open .')
+                nnoremap <silent><buffer><expr> cd defx#do_action('change_vim_cwd')
             endfunction
 
             " https://github.com/Shougo/defx.nvim/issues/175
@@ -296,6 +308,10 @@
 
     " Coc.nvim {
         if isdirectory(expand("~/.vim/plugged/coc.nvim"))
+            " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+            " delays and poor user experience.
+            set updatetime=300
+
             " using `<TAB>`
             inoremap <silent><expr> <TAB>
                         \ pumvisible() ? "\<C-n>" :
@@ -335,6 +351,10 @@
                     call CocAction('doHover')
                 endif
             endfunction
+
+            " Use CTRL-S for selections ranges.
+            nmap <silent> <C-s> <Plug>(coc-range-select)
+            xmap <silent> <C-s> <Plug>(coc-range-select)
 
             " Use `:Format` to format current buffer
             command! -nargs=0 Format :call CocAction('format')
@@ -384,8 +404,12 @@
 
             augroup Smartf
               autocmd User SmartfEnter :hi Conceal ctermfg=200 guifg=#6638F0
-              autocmd User SmartfLeave :hi Conceal ctermfg=239 guifg=#504945
+              autocmd User SmartfLeave :hi Conceal ctermfg=239 guifg=#4e4e4e
             augroup end
+
+            " Using coc-highlight
+            " Highlight the symbol and its references when holding the cursor.
+            autocmd CursorHold * silent call CocActionAsync('highlight')
         endif
     " }
 
@@ -410,7 +434,6 @@
     " Airline {
         if isdirectory(expand("~/.vim/plugged/vim-airline"))
             let g:airline_powerline_fonts = 1
-            let g:airline_theme = 'nord'
             let g:airline#extensions#coc#enabled = 1
         endif
     " }
@@ -496,6 +519,12 @@
     " Zoom {
         if isdirectory(expand("~/.vim/plugged/vim-zoom"))
             nmap <Leader>z <C-w>m
+        endif
+    " }
+
+    " GitMessage {
+        if isdirectory(expand("~/.vim/plugged/git-messenger.vim"))
+            nmap <Leader>gm <Plug>(git-messenger)
         endif
     " }
 

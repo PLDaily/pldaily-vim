@@ -1,12 +1,13 @@
 {
-  "tslint.autoFixOnSave": false,
-  "tsserver.enableJavascript": false,
+  "tslint.autoFixOnSave": true,
+  "tsserver.enableJavascript": true,
   "eslint.enable": false,
   "eslint.autoFixOnSave": true,
   "git.enableGutters": true,
   "smartf.timeout": 3000,
-  "smartf.jumpOnTrigger": false, 
+  "smartf.jumpOnTrigger": false,
   "smartf.wordJump": false,
+  "imselect.defaultInput": "com.apple.keylayout.ABC",
   "languageserver": {
     "golang": {
       "command": "gopls",
