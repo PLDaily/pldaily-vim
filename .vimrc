@@ -76,7 +76,6 @@
             Plug 'itchyny/calendar.vim'
             Plug 'dhruvasagar/vim-zoom'
             Plug 'matze/vim-move'
-            Plug 'rhysd/git-messenger.vim'
         endif
     " }
 
@@ -255,15 +254,14 @@
                         \ 'direction': 'leftabove',
                         \ 'ignored_files': '*.swp,.git,.svn,.DS_Store',
                         \ 'show_ignored_files': 0,
-                        \ 'buffer_name': '',
                         \ 'toggle': 1,
                         \ 'resume': 1
                         \ })
 
             nnoremap <silent> <C-e>
-                        \ :<C-u>Defx -resume -toggle -buffer-name=tab`tabpagenr()` `getcwd()`<CR>
+                        \ :<C-u>Defx -buffer-name=tab`tabpagenr()` `getcwd()`<CR>
             nnoremap <silent> <localleader>e
-                        \ :<C-u>Defx -resume -buffer-name=tab`tabpagenr()` -search=`expand('%:p')` `getcwd()`<CR>
+                        \ :<C-u>Defx -buffer-name=tab`tabpagenr()` -search=`expand('%:p')` `getcwd()`<CR>
 
             function! s:defx_mappings() abort
                 nnoremap <silent><buffer><expr> o
@@ -308,9 +306,28 @@
 
     " Coc.nvim {
         if isdirectory(expand("~/.vim/plugged/coc.nvim"))
+            " TextEdit might fail if hidden is not set.
+            set hidden
+
+            " Some servers have issues with backup files, see #649.
+            set nobackup
+            set nowritebackup
+
             " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
             " delays and poor user experience.
             set updatetime=300
+
+            " Don't pass messages to |ins-completion-menu|.
+            set shortmess+=c
+
+            " Always show the signcolumn, otherwise it would shift the text each time
+            " diagnostics appear/become resolved.
+            if has("patch-8.1.1564")
+                " Recently vim can merge signcolumn and number column into one
+                set signcolumn=number
+            else
+                set signcolumn=yes
+            endif
 
             " using `<TAB>`
             inoremap <silent><expr> <TAB>
@@ -435,6 +452,7 @@
         if isdirectory(expand("~/.vim/plugged/vim-airline"))
             let g:airline_powerline_fonts = 1
             let g:airline#extensions#coc#enabled = 1
+            let g:airline#extensions#hunks#coc_git = 1
         endif
     " }
 
@@ -519,12 +537,6 @@
     " Zoom {
         if isdirectory(expand("~/.vim/plugged/vim-zoom"))
             nmap <Leader>z <C-w>m
-        endif
-    " }
-
-    " GitMessage {
-        if isdirectory(expand("~/.vim/plugged/git-messenger.vim"))
-            nmap <Leader>gm <Plug>(git-messenger)
         endif
     " }
 

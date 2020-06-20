@@ -4,10 +4,16 @@
   "eslint.enable": false,
   "eslint.autoFixOnSave": true,
   "git.enableGutters": true,
+  "git.addGBlameToVirtualText": false,
   "smartf.timeout": 3000,
   "smartf.jumpOnTrigger": false,
   "smartf.wordJump": false,
   "imselect.defaultInput": "com.apple.keylayout.ABC",
+  "imselect.enableStatusItem": false,
+  "imselect.enableFloating": false,
+  "diagnostic.enable": true,
+  "diagnostic.warningSign": "⚠",
+  "diagnostic.errorSign": "×",
   "languageserver": {
     "golang": {
       "command": "gopls",
