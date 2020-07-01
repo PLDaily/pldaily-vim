@@ -1,5 +1,7 @@
 ## My Vim Config
 
+![](https://raw.githubusercontent.com/PLDaily/pldaily-vim/master/screenshot.jpg)
+
 ### 安装配置
 
 > 克隆项目
