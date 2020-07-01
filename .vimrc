@@ -15,7 +15,7 @@
     " Basics {
         set nocompatible        " Must be first line
         if !WINDOWS()
-            set shell=/bin/sh
+            set shell=/bin/bash
         endif
 
         if exists('+termguicolors')
@@ -76,6 +76,7 @@
             Plug 'itchyny/calendar.vim'
             Plug 'dhruvasagar/vim-zoom'
             Plug 'matze/vim-move'
+            Plug 'mhinz/vim-startify'
         endif
     " }
 
@@ -251,7 +252,7 @@
                         \ 'columns': 'space:indent:icons:filename:type',
                         \ 'winwidth': 30,
                         \ 'split': 'vertical',
-                        \ 'direction': 'leftabove',
+                        \ 'direction': 'rightbelow',
                         \ 'ignored_files': '*.swp,.git,.svn,.DS_Store',
                         \ 'show_ignored_files': 0,
                         \ 'toggle': 1,
@@ -277,8 +278,8 @@
                 nnoremap <silent><buffer><expr> k line('.') == 1 ? 'G' : 'k'
                 nnoremap <silent><buffer><expr> C defx#do_action('cd', defx#get_candidate().action__path)
                 nnoremap <silent><buffer><expr> u defx#do_action('cd', ['..'])
-                nnoremap <silent><buffer><expr> > defx#do_action('resize', defx#get_context().winwidth + 10)
-                nnoremap <silent><buffer><expr> < defx#do_action('resize', defx#get_context().winwidth - 10)
+                nnoremap <silent><buffer><expr> > defx#do_action('resize', defx#get_context().winwidth - 10)
+                nnoremap <silent><buffer><expr> < defx#do_action('resize', defx#get_context().winwidth + 10)
                 nnoremap <silent><buffer><expr> md defx#do_action('remove')
                 nnoremap <silent><buffer><expr> mm defx#do_action('rename')
                 nnoremap <silent><buffer><expr> ma defx#do_action('new_file')
@@ -348,6 +349,9 @@
             " Symbol renaming.
             nmap <leader>rn <Plug>(coc-rename)
 
+            " Function refactor.
+            nmap <leader>rf <Plug>(coc-refactor)
+
             " Remap keys for gotos
             nmap <silent> gd <Plug>(coc-definition)
             nmap <silent> gj <Plug>(coc-float-jump)
@@ -416,12 +420,13 @@
 
             " Using coc-smartf
             " press <esc> to cancel.
-            nmap f <Plug>(coc-smartf-forward)
-            nmap F <Plug>(coc-smartf-backward)
+            nmap s <Plug>(coc-smartf-forward)
+            nmap S <Plug>(coc-smartf-backward)
 
             augroup Smartf
-              autocmd User SmartfEnter :hi Conceal ctermfg=200 guifg=#6638F0
-              autocmd User SmartfLeave :hi Conceal ctermfg=239 guifg=#4e4e4e
+                " :highlight Conceal show default Conceal color
+                autocmd User SmartfEnter :hi Conceal ctermfg=1 guifg=#BF616A
+                autocmd User SmartfLeave :hi Conceal ctermfg=239 guifg=Grey30
             augroup end
 
             " Using coc-highlight
@@ -540,6 +545,18 @@
         endif
     " }
 
+    " Startify {
+        if isdirectory(expand("~/.vim/plugged/vim-startify"))
+            let g:startify_lists = [
+                        \ { 'type': 'dir', 'header': ['   MRU '. getcwd()] },
+                        \ ]
+            let g:startify_enable_special = 0
+            let g:startify_change_to_vcs_root = 1
+            let g:startify_custom_footer =
+                        \ ['', "   Powered by PLDaily", '']
+        endif
+    " }
+
 " }
 
 " Functions {
@@ -553,7 +570,7 @@
     endfunction
 
     execute "noremap " . s:pldaily_edit_config_mapping " :call <SID>EditPldailyConfig()<CR>"
-    execute "noremap " . s:pldaily_apply_config_mapping . " :source ~/.vimrc<CR>"
+    execute "noremap " . s:pldaily_apply_config_mapping . " :source ~/.vim/.vimrc<CR>"
 
 " }
 
