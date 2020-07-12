@@ -5,6 +5,7 @@
   "eslint.autoFixOnSave": true,
   "git.enableGutters": true,
   "git.addGBlameToVirtualText": false,
+  "git.showCommitInFloating": true,
   "smartf.timeout": 3000,
   "smartf.jumpOnTrigger": false,
   "smartf.wordJump": false,

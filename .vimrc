@@ -35,25 +35,29 @@
                 \ ]
 
     let g:coc_global_extensions = [
-                \   'coc-html',
-                \   'coc-emmet',
                 \   'coc-css',
-                \   'coc-json',
-                \   'coc-yank',
-                \   'coc-tabnine',
-                \   'coc-tslint-plugin',
                 \   'coc-cssmodules',
-                \   'coc-git',
-                \   'coc-marketplace',
-                \   'coc-lists',
-                \   'coc-vetur',
+                \   'coc-docthis',
+                \   'coc-ecdict',
+                \   'coc-emmet',
                 \   'coc-eslint',
-                \   'coc-prettier',
-                \   'coc-terminal',
-                \   'coc-smartf',
+                \   'coc-git',
                 \   'coc-highlight',
+                \   'coc-html',
                 \   'coc-imselect',
-                \   'coc-tsserver'
+                \   'coc-json',
+                \   'coc-lists',
+                \   'coc-marketplace',
+                \   'coc-picgo',
+                \   'coc-prettier',
+                \   'coc-smartf',
+                \   'coc-stylelintplus',
+                \   'coc-tabnine',
+                \   'coc-terminal',
+                \   'coc-tslint-plugin',
+                \   'coc-tsserver',
+                \   'coc-vetur',
+                \   'coc-yank'
                 \ ]
 
     call plug#begin('~/.vim/plugged')
@@ -84,7 +88,6 @@
         if count(g:pldaily_plug_groups, 'markdown')
             Plug 'hotoo/pangu.vim'
             Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
-            Plug 'vimwiki/vimwiki'
         endif
     " }
 
@@ -342,9 +345,19 @@
             endfunction
 
             " coc-prettier
+            " Formatting selected code.
             vmap <leader>fp  <Plug>(coc-format-selected)
+
+            " Apply AutoFix to problem on the current line.
             nmap <leader>fq  <Plug>(coc-fix-current)
-            nmap <leader>fs  <Plug>(coc-codeaction)
+
+            " Remap keys for applying codeAction to the current buffer.
+            nmap <leader>fs <Plug>(coc-codeaction)
+
+            " Applying codeAction to the selected region.
+            " Example: `<leader>aap` for current paragraph
+            xmap <leader>a  <Plug>(coc-codeaction-selected)
+            nmap <leader>a  <Plug>(coc-codeaction-selected)
 
             " Symbol renaming.
             nmap <leader>rn <Plug>(coc-rename)
@@ -392,17 +405,17 @@
 
             nnoremap <silent> <Leader>w  :exe 'CocList -I --input='.expand('<cword>').' words'<CR>
 
-            nnoremap <Leader>ll :CocList<CR>
-            nnoremap <Leader>lb :CocList buffers<CR>
-            nnoremap <Leader>lm :CocList mru<CR>
-            nnoremap <Leader>lf :CocList files<CR>
-            nnoremap <Leader>lg :CocList grep<CR>
-            nnoremap <Leader>lc :CocList commands<CR>
-            nnoremap <Leader>ld :CocList diagnostics<CR>
-            nnoremap <Leader>lo :CocList outline<CR>
-            nnoremap <Leader>le :CocList extensions<CR>
-            nnoremap <Leader>ls :CocList symbols<CR>
-            nnoremap <Leader>lw :CocList words<CR>
+            nnoremap <silent><nowait> <Leader>ll :<C-u>CocList<cr>
+            nnoremap <silent><nowait> <Leader>lb :<C-u>CocList buffers<cr>
+            nnoremap <silent><nowait> <Leader>lm :<C-u>CocList mru<cr>
+            nnoremap <silent><nowait> <Leader>lf :<C-u>CocList files<cr>
+            nnoremap <silent><nowait> <Leader>lg :<C-u>CocList grep<cr>
+            nnoremap <silent><nowait> <Leader>lc :<C-u>CocList commands<cr>
+            nnoremap <silent><nowait> <Leader>ld :<C-u>CocList diagnostics<cr>
+            nnoremap <silent><nowait> <Leader>lo :<C-u>CocList outline<cr>
+            nnoremap <silent><nowait> <Leader>le :<C-u>CocList extensions<cr>
+            nnoremap <silent><nowait> <Leader>ls :<C-u>CocList symbols<cr>
+            nnoremap <silent><nowait> <Leader>lw :<C-u>CocList words<cr>
 
             " Using coc-git
             " navigate chunks of current buffer
@@ -552,8 +565,7 @@
                         \ ]
             let g:startify_enable_special = 0
             let g:startify_change_to_vcs_root = 1
-            let g:startify_custom_footer =
-                        \ ['', "   Powered by PLDaily", '']
+            let g:startify_custom_footer = ['   Powered by PLDaily']
         endif
     " }
 
