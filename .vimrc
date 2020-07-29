@@ -51,6 +51,7 @@
                 \   'coc-picgo',
                 \   'coc-prettier',
                 \   'coc-smartf',
+                \   'coc-style-helper',
                 \   'coc-stylelintplus',
                 \   'coc-tabnine',
                 \   'coc-terminal',
@@ -430,6 +431,7 @@
             xmap ig <Plug>(coc-git-chunk-inner)
             omap ag <Plug>(coc-git-chunk-outer)
             xmap ag <Plug>(coc-git-chunk-outer)
+            nnoremap <silent> <Leader>gs :<C-u>CocList gstatus<CR>
 
             " Using coc-smartf
             " press <esc> to cancel.
@@ -585,4 +587,3 @@
     execute "noremap " . s:pldaily_apply_config_mapping . " :source ~/.vim/.vimrc<CR>"
 
 " }
-

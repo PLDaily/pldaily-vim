@@ -12,4 +12,3 @@ ln -s ~/.vim ~/.config/nvim
 
 # 安装 vim 插件
 vim +PlugInstall +qall
-
