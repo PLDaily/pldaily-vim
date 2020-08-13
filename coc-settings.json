@@ -4,6 +4,11 @@
   "eslint.enable": false,
   "eslint.autoFixOnSave": true,
   "git.enableGutters": true,
+  "git.addedSign.hlGroup": "GitGutterAdd",
+  "git.changedSign.hlGroup": "GitGutterChange",
+  "git.removedSign.hlGroup": "GitGutterDelete",
+  "git.topRemovedSign.hlGroup": "GitGutterDelete",
+  "git.changeRemovedSign.hlGroup": "GitGutterChangeDelete",
   "git.addGBlameToVirtualText": false,
   "git.showCommitInFloating": true,
   "smartf.timeout": 3000,
@@ -15,6 +20,8 @@
   "diagnostic.enable": true,
   "diagnostic.warningSign": "⚠",
   "diagnostic.errorSign": "×",
+  "java.format.enabled": true,
+  "java.format.settings.url": "/Users/pengchangdong/.config/coc/extensions/node_modules/redhat.java/eclipse-formatter.xml",
   "languageserver": {
     "golang": {
       "command": "gopls",

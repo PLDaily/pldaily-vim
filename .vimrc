@@ -45,6 +45,7 @@
                 \   'coc-highlight',
                 \   'coc-html',
                 \   'coc-imselect',
+                \   'coc-java',
                 \   'coc-json',
                 \   'coc-lists',
                 \   'coc-marketplace',
@@ -57,6 +58,7 @@
                 \   'coc-terminal',
                 \   'coc-tslint-plugin',
                 \   'coc-tsserver',
+                \   'coc-snippets',
                 \   'coc-vetur',
                 \   'coc-yank'
                 \ ]
@@ -77,7 +79,7 @@
             Plug 'tpope/vim-repeat'
             Plug 'christoomey/vim-tmux-navigator'
             Plug 'psliwka/vim-smoothie'
-            Plug 'terryma/vim-multiple-cursors'
+            Plug 'mg979/vim-visual-multi'
             Plug 'itchyny/calendar.vim'
             Plug 'dhruvasagar/vim-zoom'
             Plug 'matze/vim-move'
@@ -171,17 +173,19 @@
 
     set wrap                        " Do wrap long lines
     set autoindent                  " Indent at the same level of the previous line
-    set shiftwidth=4                " Use indents of 4 spaces
+    set shiftwidth=2                " Use indents of 2 spaces
     set expandtab                   " Tabs are spaces, not tabs
-    set tabstop=4                   " An indentation every four columns
-    set softtabstop=4               " Let backspace delete indent
+    set tabstop=2                   " An indentation every 2 columns
+    set softtabstop=2               " Let backspace delete indent
     set splitright                  " Puts new vsplit windows to the right of the current
     set splitbelow                  " Puts new split windows to the bottom of the current
 
     autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx syntax=typescript.tsx
+    autocmd BufNewFile,BufRead *.ts set filetype=typescript syntax=typescript
     autocmd BufNewFile,BufRead *.jsx set filetype=javascript.jsx syntax=javascript.jsx
+    autocmd BufNewFile,BufRead *.js set filetype=javascript syntax=javascript
     autocmd BufNewFile,BufRead *.mdx set filetype=mdx syntax=markdown
-    autocmd FileType html,css,scss,less,javascript,typescript,json,javascript.jsx,typescript.tsx,vue,mdx,yaml setlocal tabstop=2 shiftwidth=2 softtabstop=2
+    autocmd FileType go,vim,java setlocal tabstop=4 shiftwidth=4 softtabstop=4
 
 " }
 
@@ -344,6 +348,13 @@
                 let col = col('.') - 1
                 return !col || getline('.')[col - 1]  =~# '\s'
             endfunction
+
+            " Use <C-d> to confirm completion
+            if exists('*complete_info')
+                inoremap <expr> <C-d> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+            else
+                inoremap <expr> <C-d> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+            endif
 
             " coc-prettier
             " Formatting selected code.
@@ -515,9 +526,7 @@
     " IndentLine {
         if isdirectory(expand("~/.vim/plugged/indentLine"))
             let g:vim_json_syntax_conceal = 0
-            " defx indentLine_fileTypeExclude not work, using indentLine_fileType replace
-            " let g:indentLine_fileTypeExclude = ['calendar', 'defx']
-            let g:indentLine_fileType = ['typescript', 'javascript', 'javascript.jsx', 'typescript.tsx']
+            let g:indentLine_fileTypeExclude = ['calendar', 'defx', 'startify']
             let g:indentLine_bufTypeExclude = ['help', 'terminal']
         endif
     " }
