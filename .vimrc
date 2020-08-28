@@ -52,13 +52,13 @@
                 \   'coc-picgo',
                 \   'coc-prettier',
                 \   'coc-smartf',
+                \   'coc-snippets',
                 \   'coc-style-helper',
                 \   'coc-stylelintplus',
                 \   'coc-tabnine',
                 \   'coc-terminal',
                 \   'coc-tslint-plugin',
                 \   'coc-tsserver',
-                \   'coc-snippets',
                 \   'coc-vetur',
                 \   'coc-yank'
                 \ ]
@@ -385,8 +385,10 @@
             nmap <silent> gt <Plug>(coc-terminal-toggle)
 
             " navigate diagnostics
-            nmap <silent> ]d <Plug>(coc-diagnostic-next-error)
-            nmap <silent> [d <Plug>(coc-diagnostic-prev-error)
+            nmap <silent> ]e <Plug>(coc-diagnostic-next-error)
+            nmap <silent> [e <Plug>(coc-diagnostic-prev-error)
+            nmap <silent> ]d <Plug>(coc-diagnostic-next)
+            nmap <silent> [d <Plug>(coc-diagnostic-prev)
 
             " Use K to show documentation in preview window
             nnoremap <silent> K :call <SID>show_documentation()<CR>
