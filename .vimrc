@@ -308,6 +308,8 @@
                 endif
             endfunction
 
+            autocmd FileType defx setlocal nonumber
+            autocmd FileType defx setlocal norelativenumber
             autocmd FileType defx call s:defx_mappings()
             autocmd BufEnter * call s:open_defx_if_directory()
         endif
@@ -349,12 +351,11 @@
                 return !col || getline('.')[col - 1]  =~# '\s'
             endfunction
 
-            " Use <C-d> to confirm completion
-            if exists('*complete_info')
-                inoremap <expr> <C-d> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-            else
-                inoremap <expr> <C-d> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-            endif
+            " Use <C-d>, <cr> to confirm completion
+            inoremap <silent><expr> <C-d> pumvisible() ? coc#_select_confirm()
+                        \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+            inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                        \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
             " coc-prettier
             " Formatting selected code.
@@ -364,7 +365,8 @@
             nmap <leader>fq  <Plug>(coc-fix-current)
 
             " Remap keys for applying codeAction to the current buffer.
-            nmap <leader>fs <Plug>(coc-codeaction)
+            nmap <leader>fs <Plug>(coc-codeaction-line)
+            nmap <leader>fa <Plug>(coc-codeaction)
 
             " Applying codeAction to the selected region.
             " Example: `<leader>aap` for current paragraph
@@ -384,6 +386,10 @@
             tnoremap <Esc> <C-\><C-n>
             nmap <silent> gt <Plug>(coc-terminal-toggle)
 
+            " gd prevent preview
+            let g:coc_enable_locationlist = 0
+            autocmd User CocLocationsChange CocList --normal location
+
             " navigate diagnostics
             nmap <silent> ]e <Plug>(coc-diagnostic-next-error)
             nmap <silent> [e <Plug>(coc-diagnostic-prev-error)
@@ -395,8 +401,10 @@
             function! s:show_documentation()
                 if (index(['vim','help'], &filetype) >= 0)
                     execute 'h '.expand('<cword>')
+                elseif (coc#rpc#ready())
+                    call CocActionAsync('doHover')
                 else
-                    call CocAction('doHover')
+                    execute '!' . &keywordprg . " " . expand('<cword>')
                 endif
             endfunction
 
