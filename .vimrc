@@ -14,6 +14,7 @@
 
     " Basics {
         set nocompatible        " Must be first line
+        lang en_US.UTF-8
         if !WINDOWS()
             set shell=/bin/bash
         endif
@@ -30,36 +31,19 @@
     let g:pldaily_plug_groups = [
                 \   'general',
                 \   'markdown',
-                \   'css',
                 \   'javascript'
                 \ ]
 
     let g:coc_global_extensions = [
-                \   'coc-css',
                 \   'coc-cssmodules',
-                \   'coc-docthis',
-                \   'coc-ecdict',
                 \   'coc-emmet',
                 \   'coc-eslint',
                 \   'coc-git',
-                \   'coc-highlight',
-                \   'coc-html',
-                \   'coc-imselect',
-                \   'coc-java',
                 \   'coc-json',
                 \   'coc-lists',
-                \   'coc-marketplace',
-                \   'coc-picgo',
-                \   'coc-prettier',
-                \   'coc-smartf',
-                \   'coc-snippets',
-                \   'coc-style-helper',
                 \   'coc-stylelintplus',
-                \   'coc-tabnine',
                 \   'coc-terminal',
-                \   'coc-tslint-plugin',
                 \   'coc-tsserver',
-                \   'coc-vetur',
                 \   'coc-yank'
                 \ ]
 
@@ -67,23 +51,24 @@
 
     " General {
         if count(g:pldaily_plug_groups, 'general')
-            Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
-            Plug 'kristijanhusak/defx-icons'
-            Plug 'vim-airline/vim-airline'
             Plug 'arcticicestudio/nord-vim'
-            Plug 'Yggdroot/indentLine'
+            Plug 'morhetz/gruvbox'
+            Plug 'vim-airline/vim-airline'
             Plug 'mbbill/undotree'
             Plug 'scrooloose/nerdcommenter'
             Plug 'raimondi/delimitMate'
-            Plug 'tpope/vim-surround'
             Plug 'tpope/vim-repeat'
-            Plug 'christoomey/vim-tmux-navigator'
             Plug 'psliwka/vim-smoothie'
             Plug 'mg979/vim-visual-multi'
             Plug 'itchyny/calendar.vim'
             Plug 'dhruvasagar/vim-zoom'
-            Plug 'matze/vim-move'
-            Plug 'mhinz/vim-startify'
+            Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+            Plug 'kristijanhusak/defx-icons'
+            Plug 'christoomey/vim-tmux-navigator'
+            " Plug 'tpope/vim-surround'
+            " Plug 'Yggdroot/indentLine'
+            " Plug 'matze/vim-move'
+            " Plug 'mhinz/vim-startify'
         endif
     " }
 
@@ -94,21 +79,15 @@
         endif
     " }
 
-    " Css {
-        if count(g:pldaily_plug_groups, 'css')
-            Plug 'cakebaker/scss-syntax.vim'
-        endif
-    " }
-
     " JavaScript {
         if count(g:pldaily_plug_groups, 'javascript')
-            Plug 'elzr/vim-json'
             Plug 'leafgarland/typescript-vim'
             Plug 'neoclide/coc.nvim', {'branch': 'release'}
-            Plug 'posva/vim-vue', { 'for': 'vue' }
             Plug 'pangloss/vim-javascript'
             Plug 'mxw/vim-jsx'
             Plug 'peitalin/vim-jsx-typescript'
+            " Plug 'posva/vim-vue', { 'for': 'vue' }
+            " Plug 'elzr/vim-json'
         endif
     " }
 
@@ -120,7 +99,8 @@
 
     " Clojure {
         if count(g:pldaily_plug_groups, 'clojure')
-            Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+            Plug 'guns/vim-sexp',    {'for': 'clojure'}
+            Plug 'liquidz/vim-iced', {'for': 'clojure'}
         endif
     " }
 
@@ -180,10 +160,8 @@
     set splitright                  " Puts new vsplit windows to the right of the current
     set splitbelow                  " Puts new split windows to the bottom of the current
 
-    autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx syntax=typescript.tsx
-    autocmd BufNewFile,BufRead *.ts set filetype=typescript syntax=typescript
-    autocmd BufNewFile,BufRead *.jsx set filetype=javascript.jsx syntax=javascript.jsx
-    autocmd BufNewFile,BufRead *.js set filetype=javascript syntax=javascript
+    autocmd BufNewFile,BufRead *.tsx set filetype=typescriptreact syntax=typescriptreact
+    autocmd BufNewFile,BufRead *.jsx set filetype=javascriptreact syntax=javascriptreact
     autocmd BufNewFile,BufRead *.mdx set filetype=mdx syntax=markdown
     autocmd FileType go,vim,java setlocal tabstop=4 shiftwidth=4 softtabstop=4
 
@@ -239,7 +217,7 @@
     noremap L $
 
     " change root dir
-    nnoremap <leader>cd :cd %:p:h<CR>
+    nnoremap <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 " }
 
@@ -247,8 +225,10 @@
 
     " Nord {
         if isdirectory(expand("~/.vim/plugged/nord-vim"))
-            let g:nord_cursor_line_number_background = 1
-            colorscheme nord
+            " let g:nord_cursor_line_number_background = 1
+            " colorscheme nord
+            let g:gitgutter_override_sign_column_highlight = 1
+            colorscheme gruvbox
         endif
     " }
 
@@ -381,14 +361,11 @@
 
             " Remap keys for gotos
             nmap <silent> gd <Plug>(coc-definition)
+            nmap <silent> gr <Plug>(coc-references)
             nmap <silent> gj <Plug>(coc-float-jump)
             " use <C-\><C-n> exit terminal mode
             tnoremap <Esc> <C-\><C-n>
             nmap <silent> gt <Plug>(coc-terminal-toggle)
-
-            " gd prevent preview
-            let g:coc_enable_locationlist = 0
-            autocmd User CocLocationsChange CocList --normal location
 
             " navigate diagnostics
             nmap <silent> ]e <Plug>(coc-diagnostic-next-error)
@@ -425,9 +402,13 @@
             " Keymapping for grep word under cursor with interactive mode
             nnoremap <silent> <Leader>cf :exe 'CocList -I --input='.expand('<cword>').' grep'<CR>
 
-            nnoremap <silent> <Leader>w  :exe 'CocList -I --input='.expand('<cword>').' words'<CR>
+            nnoremap <silent> <Leader>w :exe 'CocList -I --input='.expand('<cword>').' words'<CR>
+            nnoremap <silent> * :exe 'CocList -I --input='.expand('<cword>').' words'<CR>
 
+            nnoremap <silent><nowait> <Leader>ln :<C-u>CocNext<cr>
+            nnoremap <silent><nowait> <Leader>lp :<C-u>CocPrev<cr>
             nnoremap <silent><nowait> <Leader>ll :<C-u>CocList<cr>
+            nnoremap <silent><nowait> / :<C-u>CocList lines<cr>
             nnoremap <silent><nowait> <Leader>lb :<C-u>CocList buffers<cr>
             nnoremap <silent><nowait> <Leader>lm :<C-u>CocList mru<cr>
             nnoremap <silent><nowait> <Leader>lf :<C-u>CocList files<cr>
@@ -443,6 +424,9 @@
             " navigate chunks of current buffer
             nmap [g <Plug>(coc-git-prevchunk)
             nmap ]g <Plug>(coc-git-nextchunk)
+            " navigate conflicts of current buffer
+            nmap [c <Plug>(coc-git-prevconflict)
+            nmap ]c <Plug>(coc-git-nextconflict)
             " show chunk diff at current position
             nmap gs <Plug>(coc-git-chunkinfo)
             " show commit contains current position
@@ -475,10 +459,6 @@
         if isdirectory(expand("~/.vim/plugged/nerdcommenter"))
             " Add spaces after comment delimiters by default
             let g:NERDSpaceDelims = 1
-            let g:NERDCustomDelimiters = {
-                        \   'typescript.tsx': { 'left': '//', 'leftAlt': '{/*', 'rightAlt': '*/}' },
-                        \   'javascript.jsx': { 'left': '//', 'leftAlt': '{/*', 'rightAlt': '*/}' },
-                        \ }
         endif
     " }
 
@@ -494,6 +474,8 @@
             let g:airline_powerline_fonts = 1
             let g:airline#extensions#coc#enabled = 1
             let g:airline#extensions#hunks#coc_git = 1
+            let g:airline_section_x = ''
+            let g:airline_section_y = airline#section#create_right(['filetype'])
         endif
     " }
 
