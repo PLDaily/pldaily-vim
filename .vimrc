@@ -28,81 +28,63 @@
 
 " Use plug config {
 
-    let g:pldaily_plug_groups = [
-                \   'general',
-                \   'markdown',
-                \   'javascript'
-                \ ]
-
     let g:coc_global_extensions = [
-                \   'coc-cssmodules',
-                \   'coc-emmet',
-                \   'coc-eslint',
-                \   'coc-git',
-                \   'coc-json',
-                \   'coc-lists',
-                \   'coc-stylelintplus',
-                \   'coc-terminal',
-                \   'coc-tsserver',
-                \   'coc-yank'
-                \ ]
+          \   'coc-cssmodules',
+          \   'coc-emmet',
+          \   'coc-eslint',
+          \   'coc-git',
+          \   'coc-highlight',
+          \   'coc-imselect',
+          \   'coc-json',
+          \   'coc-lists',
+          \   'coc-marketplace',
+          \   'coc-prettier',
+          \   'coc-smartf',
+          \   'coc-stylelintplus',
+          \   'coc-terminal',
+          \   'coc-tabnine',
+          \   'coc-tsserver',
+          \   'coc-yank'
+          \ ]
 
     call plug#begin('~/.vim/plugged')
 
-    " General {
-        if count(g:pldaily_plug_groups, 'general')
-            Plug 'arcticicestudio/nord-vim'
-            Plug 'morhetz/gruvbox'
-            Plug 'vim-airline/vim-airline'
-            Plug 'mbbill/undotree'
-            Plug 'scrooloose/nerdcommenter'
-            Plug 'raimondi/delimitMate'
-            Plug 'tpope/vim-repeat'
-            Plug 'psliwka/vim-smoothie'
-            Plug 'mg979/vim-visual-multi'
-            Plug 'itchyny/calendar.vim'
-            Plug 'dhruvasagar/vim-zoom'
-            Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
-            Plug 'kristijanhusak/defx-icons'
-            Plug 'christoomey/vim-tmux-navigator'
-            " Plug 'tpope/vim-surround'
-            " Plug 'Yggdroot/indentLine'
-            " Plug 'matze/vim-move'
-            " Plug 'mhinz/vim-startify'
-        endif
-    " }
-
-    " Markdown {
-        if count(g:pldaily_plug_groups, 'markdown')
-            Plug 'hotoo/pangu.vim'
-            Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
-        endif
-    " }
-
-    " JavaScript {
-        if count(g:pldaily_plug_groups, 'javascript')
-            Plug 'leafgarland/typescript-vim'
-            Plug 'neoclide/coc.nvim', {'branch': 'release'}
-            Plug 'pangloss/vim-javascript'
-            Plug 'mxw/vim-jsx'
-            Plug 'peitalin/vim-jsx-typescript'
-            " Plug 'posva/vim-vue', { 'for': 'vue' }
-            " Plug 'elzr/vim-json'
-        endif
-    " }
-
-    " GoLang {
-        if count(g:pldaily_plug_groups, 'golang')
-            Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
-        endif
-    " }
-
-    " Clojure {
-        if count(g:pldaily_plug_groups, 'clojure')
-            Plug 'guns/vim-sexp',    {'for': 'clojure'}
-            Plug 'liquidz/vim-iced', {'for': 'clojure'}
-        endif
-    " }
+        Plug 'sainnhe/everforest'
+        Plug 'vim-airline/vim-airline'
+        Plug 'mbbill/undotree'
+        Plug 'scrooloose/nerdcommenter'
+        Plug 'raimondi/delimitMate'
+        Plug 'tpope/vim-repeat'
+        Plug 'psliwka/vim-smoothie'
+        Plug 'mg979/vim-visual-multi'
+        Plug 'itchyny/calendar.vim'
+        Plug 'dhruvasagar/vim-zoom'
+        Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+        Plug 'kristijanhusak/defx-icons'
+        Plug 'machakann/vim-sandwich'
+        Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+        Plug 'neoclide/coc.nvim', {'branch': 'release'}
+        Plug 'hotoo/pangu.vim'
+        Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+        Plug 'sainnhe/gruvbox-material'
+        " Plug 'scrooloose/nerdtree'
+        " Plug 'ryanoasis/vim-devicons'
+        " Plug 'christoomey/vim-tmux-navigator'
+        " Plug 'arcticicestudio/nord-vim'
+        " Plug 'morhetz/gruvbox'
+        " Plug 'leafgarland/typescript-vim'
+        " Plug 'pangloss/vim-javascript'
+        " Plug 'mxw/vim-jsx'
+        " Plug 'peitalin/vim-jsx-typescript'
+        " Plug 'posva/vim-vue', { 'for': 'vue' }
+        " Plug 'elzr/vim-json'
+        " Plug 'tpope/vim-surround'
+        " Plug 'Yggdroot/indentLine'
+        " Plug 'matze/vim-move'
+        " Plug 'mhinz/vim-startify'
+        " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
+        " Plug 'guns/vim-sexp',    {'for': 'clojure'}
+        " Plug 'liquidz/vim-iced', {'for': 'clojure'}
 
     call plug#end()
 
@@ -160,8 +142,8 @@
     set splitright                  " Puts new vsplit windows to the right of the current
     set splitbelow                  " Puts new split windows to the bottom of the current
 
-    autocmd BufNewFile,BufRead *.tsx set filetype=typescriptreact syntax=typescriptreact
-    autocmd BufNewFile,BufRead *.jsx set filetype=javascriptreact syntax=javascriptreact
+    " autocmd BufNewFile,BufRead *.tsx set filetype=typescriptreact syntax=javascriptreact
+    " autocmd BufNewFile,BufRead *.jsx set filetype=javascriptreact syntax=javascriptreact
     autocmd BufNewFile,BufRead *.mdx set filetype=mdx syntax=markdown
     autocmd FileType go,vim,java setlocal tabstop=4 shiftwidth=4 softtabstop=4
 
@@ -223,12 +205,26 @@
 
 " Plugins {
 
-    " Nord {
-        if isdirectory(expand("~/.vim/plugged/nord-vim"))
+    " Theme {
+        if isdirectory(expand("~/.vim/plugged/everforest"))
+            " nord
             " let g:nord_cursor_line_number_background = 1
             " colorscheme nord
-            let g:gitgutter_override_sign_column_highlight = 1
-            colorscheme gruvbox
+
+            " gruvbox
+            " let g:gitgutter_override_sign_column_highlight = 1
+            " colorscheme gruvbox
+
+            " gruvbox-material
+            " let g:gruvbox_material_sign_column_background = 'none'
+            " colorscheme gruvbox-material
+
+            " everforest
+            let g:everforest_sign_column_background = 'none'
+            let g:everforest_background = 'hard'
+            colorscheme everforest
+
+            highlight EndOfBuffer ctermfg=bg guifg=bg
         endif
     " }
 
@@ -237,14 +233,15 @@
             let g:defx_icons_enable_syntax_highlight = 1
             let g:defx_icons_column_length = 1
             call defx#custom#option('_', {
-                        \ 'columns': 'space:indent:icons:filename:type',
-                        \ 'winwidth': 30,
+                        \ 'columns': 'space:indent:icons:space:filename:type',
+                        \ 'winwidth': 40,
                         \ 'split': 'vertical',
                         \ 'direction': 'rightbelow',
                         \ 'ignored_files': '*.swp,.git,.svn,.DS_Store',
                         \ 'show_ignored_files': 0,
                         \ 'toggle': 1,
-                        \ 'resume': 1
+                        \ 'resume': 1,
+                        \ 'root_marker': '@'
                         \ })
 
             nnoremap <silent> <C-e>
@@ -295,8 +292,37 @@
         endif
     " }
 
+    " NerdTree {
+        if isdirectory(expand("~/.vim/plugged/nerdtree"))
+            " using :NERDTree restart NERDTree
+            map <C-e> :NERDTreeToggle<CR>
+            map <localleader>e :NERDTreeFind<CR>
+
+            let NERDTreeIgnore = ['\.swp$', '^\.git$', '^\.svn$', '^\.DS_Store$']
+            let NERDTreeMouseMode = 2
+            let NERDTreeShowHidden = 1
+            let NERDTreeMinimalUI = 1
+            let NERDTreeDirArrowExpandable = "\u00a0"
+            let NERDTreeDirArrowCollapsible = "\u00a0"
+            let NERDTreeNodeDelimiter = "\x07"
+        endif
+    " }
+
+    " Devicons {
+        if isdirectory(expand("~/.vim/plugged/vim-devicons"))
+            if exists("g:loaded_webdevicons")
+                call webdevicons#refresh()
+            endif
+            let g:DevIconsEnableFoldersOpenClose = 1
+        endif
+    " }
+
     " Coc.nvim {
         if isdirectory(expand("~/.vim/plugged/coc.nvim"))
+            " Set internal encoding of vim, not needed on neovim, since coc.nvim using some
+            " unicode characters in the file autoload/float.vim
+            set encoding=utf-8
+
             " TextEdit might fail if hidden is not set.
             set hidden
 
@@ -306,7 +332,7 @@
 
             " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
             " delays and poor user experience.
-            set updatetime=300
+            set updatetime=200
 
             " Don't pass messages to |ins-completion-menu|.
             set shortmess+=c
@@ -415,7 +441,7 @@
             nnoremap <silent><nowait> <Leader>lg :<C-u>CocList grep<cr>
             nnoremap <silent><nowait> <Leader>lc :<C-u>CocList commands<cr>
             nnoremap <silent><nowait> <Leader>ld :<C-u>CocList diagnostics<cr>
-            nnoremap <silent><nowait> <Leader>lo :<C-u>CocList outline<cr>
+            nnoremap <silent><nowait> <Leader>lo :<C-u>CocOutline<cr>
             nnoremap <silent><nowait> <Leader>le :<C-u>CocList extensions<cr>
             nnoremap <silent><nowait> <Leader>ls :<C-u>CocList symbols<cr>
             nnoremap <silent><nowait> <Leader>lw :<C-u>CocList words<cr>
@@ -440,8 +466,8 @@
 
             " Using coc-smartf
             " press <esc> to cancel.
-            nmap s <Plug>(coc-smartf-forward)
-            nmap S <Plug>(coc-smartf-backward)
+            nmap f <Plug>(coc-smartf-forward)
+            nmap F <Plug>(coc-smartf-backward)
 
             augroup Smartf
                 " :highlight Conceal show default Conceal color
@@ -569,6 +595,27 @@
             let g:startify_enable_special = 0
             let g:startify_change_to_vcs_root = 1
             let g:startify_custom_footer = ['   Powered by PLDaily']
+        endif
+    " }
+
+    " Treesitter {
+        if isdirectory(expand("~/.vim/plugged/nvim-treesitter"))
+            lua <<EOF
+            require'nvim-treesitter.configs'.setup {
+                ensure_installed = {
+                            \ "html",
+                            \ "css",
+                            \ "scss",
+                            \ "json",
+                            \ "javascript",
+                            \ "typescript",
+                            \ "tsx"
+                            \ },
+                highlight = {
+                    enable = true,
+                },
+            }
+EOF
         endif
     " }
 
