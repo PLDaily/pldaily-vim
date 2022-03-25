@@ -38,6 +38,7 @@
           \   'coc-json',
           \   'coc-lists',
           \   'coc-marketplace',
+          \   'coc-pairs',
           \   'coc-prettier',
           \   'coc-smartf',
           \   'coc-stylelintplus',
@@ -49,29 +50,44 @@
 
     call plug#begin('~/.vim/plugged')
 
-        Plug 'sainnhe/everforest'
-        Plug 'vim-airline/vim-airline'
+        Plug 'sainnhe/gruvbox-material'
         Plug 'mbbill/undotree'
         Plug 'scrooloose/nerdcommenter'
-        Plug 'raimondi/delimitMate'
         Plug 'tpope/vim-repeat'
         Plug 'psliwka/vim-smoothie'
         Plug 'mg979/vim-visual-multi'
         Plug 'itchyny/calendar.vim'
         Plug 'dhruvasagar/vim-zoom'
-        Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+        Plug 'Shougo/defx.nvim', {'do': ':UpdateRemotePlugins'}
         Plug 'kristijanhusak/defx-icons'
         Plug 'machakann/vim-sandwich'
         Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
         Plug 'neoclide/coc.nvim', {'branch': 'release'}
         Plug 'hotoo/pangu.vim'
-        Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
-        Plug 'sainnhe/gruvbox-material'
+        Plug 'iamcco/markdown-preview.nvim', {'do': 'cd app && yarn install'}
+        Plug 'nvim-lualine/lualine.nvim'
+        Plug 'christoomey/vim-tmux-navigator'
+        Plug 'github/Copilot.vim'
+        " Plug 'brooth/far.vim'
+        " Plug 'vim-airline/vim-airline'
+        " Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+        " Plug 'wellle/context.vim'
+        " Plug 'hrsh7th/nvim-cmp'
+        " Plug 'hrsh7th/cmp-buffer'
+        " Plug 'hrsh7th/cmp-path'
+        " Plug 'github/copilot.vim'
+        " Plug 'sindrets/diffview.nvim'
+        " Plug 'romgrk/todoist.nvim', { 'do': ':TodoistInstall' }
+        " Plug 'kristijanhusak/vim-carbon-now-sh'
+        " Plug 'lukas-reineke/indent-blankline.nvim'
+        " Plug 'kristijanhusak/orgmode.nvim'
+        " Plug 'kyazdani42/nvim-web-devicons'
+        " Plug 'raimondi/delimitMate'
         " Plug 'scrooloose/nerdtree'
         " Plug 'ryanoasis/vim-devicons'
-        " Plug 'christoomey/vim-tmux-navigator'
         " Plug 'arcticicestudio/nord-vim'
-        " Plug 'morhetz/gruvbox'
+        " Plug 'sainnhe/everforest'
+        " Plug 'sainnhe/gruvbox-material'
         " Plug 'leafgarland/typescript-vim'
         " Plug 'pangloss/vim-javascript'
         " Plug 'mxw/vim-jsx'
@@ -142,10 +158,13 @@
     set splitright                  " Puts new vsplit windows to the right of the current
     set splitbelow                  " Puts new split windows to the bottom of the current
 
-    " autocmd BufNewFile,BufRead *.tsx set filetype=typescriptreact syntax=javascriptreact
-    " autocmd BufNewFile,BufRead *.jsx set filetype=javascriptreact syntax=javascriptreact
+    autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx syntax=javascriptreact
+    autocmd BufNewFile,BufRead *.jsx set filetype=javascript.jsx syntax=javascriptreact
     autocmd BufNewFile,BufRead *.mdx set filetype=mdx syntax=markdown
     autocmd FileType go,vim,java setlocal tabstop=4 shiftwidth=4 softtabstop=4
+    autocmd BufReadPre * if getfsize(expand("%")) > 1000000 | syntax off | endif
+
+    command! -nargs=0 Code execute ":!code -g %:p\:" . line('.') . ":" . col('.')
 
 " }
 
@@ -184,9 +203,6 @@
     " remove search highlight
     nmap <silent> <leader>/ :nohlsearch<CR>
 
-    " Find merge conflict markers
-    map <leader>fc /\v^[<\|=>]{7}( .*\|$)<CR>
-
     " Visual shifting (does not exit Visual mode)
     vnoremap < <gv
     vnoremap > >gv
@@ -206,7 +222,7 @@
 " Plugins {
 
     " Theme {
-        if isdirectory(expand("~/.vim/plugged/everforest"))
+        if isdirectory(expand("~/.vim/plugged/gruvbox-material"))
             " nord
             " let g:nord_cursor_line_number_background = 1
             " colorscheme nord
@@ -216,13 +232,13 @@
             " colorscheme gruvbox
 
             " gruvbox-material
-            " let g:gruvbox_material_sign_column_background = 'none'
-            " colorscheme gruvbox-material
+            let g:gruvbox_material_sign_column_background = 'none'
+            colorscheme gruvbox-material
 
             " everforest
-            let g:everforest_sign_column_background = 'none'
-            let g:everforest_background = 'hard'
-            colorscheme everforest
+            " let g:everforest_sign_column_background = 'none'
+            " let g:everforest_background = 'hard'
+            " colorscheme everforest
 
             highlight EndOfBuffer ctermfg=bg guifg=bg
         endif
@@ -247,7 +263,7 @@
             nnoremap <silent> <C-e>
                         \ :<C-u>Defx -buffer-name=tab`tabpagenr()` `getcwd()`<CR>
             nnoremap <silent> <localleader>e
-                        \ :<C-u>Defx -buffer-name=tab`tabpagenr()` -search=`expand('%:p')` `getcwd()`<CR>
+                        \ :<C-u>Defx -buffer-name=tab`tabpagenr()` -search_recursive=`expand('%:p')` `getcwd()`<CR>
 
             function! s:defx_mappings() abort
                 nnoremap <silent><buffer><expr> o
@@ -265,11 +281,13 @@
                 nnoremap <silent><buffer><expr> u defx#do_action('cd', ['..'])
                 nnoremap <silent><buffer><expr> > defx#do_action('resize', defx#get_context().winwidth - 10)
                 nnoremap <silent><buffer><expr> < defx#do_action('resize', defx#get_context().winwidth + 10)
-                nnoremap <silent><buffer><expr> md defx#do_action('remove')
+                nnoremap <silent><buffer><expr> md defx#do_action('remove_trash')
                 nnoremap <silent><buffer><expr> mm defx#do_action('rename')
                 nnoremap <silent><buffer><expr> ma defx#do_action('new_file')
-                nnoremap <silent><buffer><expr> mr defx#do_action('execute_command', 'open .')
+                nnoremap <silent><buffer><expr> mr defx#do_action('execute_command', 'open ' . defx#get_candidate().action__path)
                 nnoremap <silent><buffer><expr> cd defx#do_action('change_vim_cwd')
+                nnoremap <silent><buffer><expr> p defx#do_action('print')
+                nnoremap <silent><buffer><expr> y defx#do_action('yank_path')
             endfunction
 
             " https://github.com/Shougo/defx.nvim/issues/175
@@ -411,9 +429,14 @@
                 endif
             endfunction
 
+            " autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+
             " Use CTRL-S for selections ranges.
             nmap <silent> <C-s> <Plug>(coc-range-select)
             xmap <silent> <C-s> <Plug>(coc-range-select)
+
+            " Run the Code Lens action on the current line.
+            nmap <leader>la  <Plug>(coc-codelens-action)
 
             " Use `:Format` to format current buffer
             command! -nargs=0 Format :call CocAction('format')
@@ -427,6 +450,22 @@
 
             " Keymapping for grep word under cursor with interactive mode
             nnoremap <silent> <Leader>cf :exe 'CocList -I --input='.expand('<cword>').' grep'<CR>
+            vnoremap <silent> <leader>cf :<C-u>call <SID>GrepFromSelected(visualmode())<CR>
+
+            function! s:GrepFromSelected(type)
+              let saved_unnamed_register = @@
+              if a:type ==# 'v'
+                normal! `<v`>y
+              elseif a:type ==# 'char'
+                normal! `[v`]y
+              else
+                return
+              endif
+              let word = substitute(@@, '\n$', '', 'g')
+              let word = escape(word, '| ')
+              let @@ = saved_unnamed_register
+              execute 'CocList grep '.word
+            endfunction
 
             nnoremap <silent> <Leader>w :exe 'CocList -I --input='.expand('<cword>').' words'<CR>
             nnoremap <silent> * :exe 'CocList -I --input='.expand('<cword>').' words'<CR>
@@ -445,6 +484,10 @@
             nnoremap <silent><nowait> <Leader>le :<C-u>CocList extensions<cr>
             nnoremap <silent><nowait> <Leader>ls :<C-u>CocList symbols<cr>
             nnoremap <silent><nowait> <Leader>lw :<C-u>CocList words<cr>
+
+            " Using coc-translator
+            nmap <Leader>p <Plug>(coc-translator-p)
+            vmap <Leader>p <Plug>(coc-translator-pv)
 
             " Using coc-git
             " navigate chunks of current buffer
@@ -485,6 +528,10 @@
         if isdirectory(expand("~/.vim/plugged/nerdcommenter"))
             " Add spaces after comment delimiters by default
             let g:NERDSpaceDelims = 1
+            let g:NERDCustomDelimiters = {
+                  \ 'typescript.tsx': { 'left': '//', 'leftAlt': '{/*', 'rightAlt': '*/}' },
+                  \ 'javascript.jsx': { 'left': '//', 'leftAlt': '{/*', 'rightAlt': '*/}' },
+                  \ }
         endif
     " }
 
@@ -546,6 +593,13 @@
             let g:vim_json_syntax_conceal = 0
             let g:indentLine_fileTypeExclude = ['calendar', 'defx', 'startify']
             let g:indentLine_bufTypeExclude = ['help', 'terminal']
+        endif
+    " }
+
+    " IndentBlankline {
+        if isdirectory(expand("~/.vim/plugged/indent-blankline.nvim"))
+            let g:indent_blankline_filetype_exclude = ['calendar', 'defx', 'startify']
+            let g:indent_blankline_buftype_exclude = ['help', 'terminal']
         endif
     " }
 
@@ -613,9 +667,50 @@
                             \ },
                 highlight = {
                     enable = true,
+                    disable = function(lang, bufnr) -- Disable in large javascript buffers
+                        return lang == "javascript" and vim.fn.getfsize(vim.fn.expand("%")) > 1000000
+                    end,
                 },
             }
 EOF
+        endif
+    " }
+
+    " DiffView {
+        if isdirectory(expand("~/.vim/plugged/diffview.nvim"))
+            nnoremap <Leader>gd :DiffviewOpen<CR>
+            lua <<EOF
+            require'diffview'.setup {
+                use_icons = false,
+                file_panel = {
+                  position = "right"
+                }
+            }
+EOF
+        endif
+    " }
+
+    " lualine {
+        if isdirectory(expand("~/.vim/plugged/lualine.nvim"))
+            lua << END
+            require('lualine').setup {
+                options = {
+                    component_separators = '|',
+                    disabled_filetypes = { 'defx' },
+                },
+            sections = {
+                lualine_a = { 'mode' },
+                lualine_b = { 'branch', 'diff', {
+                    'diagnostics',
+                    sources = { 'nvim_diagnostic', 'coc' },
+                }},
+                lualine_c = { 'filename', 'g:coc_status' },
+                lualine_x = {},
+                lualine_y = { 'filetype', 'progress' },
+                lualine_z = { 'location' },
+            },
+        }
+END
         endif
     " }
 
